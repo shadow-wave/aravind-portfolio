@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aravind O. K. | Computational Physics & Software Architect</title>
+    
+    <!-- Meta & OpenGraph -->
+    <meta name="description" content="Portfolio of Aravind O. K. - Computational Physics, WebAssembly Engines, Pandas Analytics & Interactive Canvas Systems.">
+    <meta name="theme-color" content="#030305">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome & Tailwind CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', '-apple-system', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    colors: {
+                        dark: '#030305',
+                        surface: 'rgba(10, 13, 22, 0.8)',
+                        surfaceHover: 'rgba(18, 22, 38, 0.9)',
+                        brand: {
+                            indigo: '#6366f1',
+                            purple: '#a855f7',
+                            emerald: '#10b981',
+                            cyan: '#06b6d4',
+                        }
+                    },
+                    animation: {
+                        'blob': 'blob 16s infinite alternate cubic-bezier(0.4, 0, 0.2, 1)',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)', filter: 'blur(90px)' },
+                            '50%': { transform: 'translate(50px, -60px) scale(1.2)', filter: 'blur(110px)' },
+                            '100%': { transform: 'translate(-40px, 40px) scale(0.9)', filter: 'blur(90px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .glass-panel {
+            background: rgba(10, 13, 22, 0.78);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .glass-panel:hover {
+            border-color: rgba(99, 102, 241, 0.35);
+            box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.18);
+        }
+        .glass-nav {
+            background: rgba(3, 3, 5, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .terminal-scroll::-webkit-scrollbar { width: 4px; }
+        .terminal-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.12); border-radius: 4px; }
+        
+        /* Custom Glowing Glow Effects */
+        .text-glow-indigo { text-shadow: 0 0 20px rgba(99, 102, 241, 0.5); }
+        .badge-glow { box-shadow: 0 0 15px -3px rgba(99, 102, 241, 0.4); }
+    </style>
+</head>
+<body class="bg-dark text-slate-200 antialiased selection:bg-indigo-500 selection:text-white relative overflow-x-hidden min-h-screen">
+
+    <!-- Interactive Ambient Canvas Background -->
+    <canvas id="physics-canvas" class="fixed inset-0 pointer-events-none -z-10"></canvas>
+
+    <!-- Mesh Gradient Blobs -->
+    <div class="fixed inset-0 -z-20 pointer-events-none overflow-hidden">
+        <div class="absolute top-[-15%] left-[-10%] w-[550px] h-[550px] bg-indigo-600/15 rounded-full animate-blob"></div>
+        <div class="absolute top-[35%] right-[-15%] w-[600px] h-[600px] bg-purple-600/15 rounded-full animate-blob" style="animation-delay: -6s;"></div>
+        <div class="absolute bottom-[-15%] left-[25%] w-[500px] h-[500px] bg-emerald-600/10 rounded-full animate-blob" style="animation-delay: -12s;"></div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 left-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 via-indigo-600 to-purple-600 flex items-center justify-center text-white font-extrabold text-base shadow-lg shadow-indigo-600/20 group-hover:scale-105 transition-transform">
+                    A
+                </div>
+                <div>
+                    <span class="font-bold text-sm tracking-tight text-white group-hover:text-indigo-300 transition-colors">Aravind O. K.</span>
+                    <span class="block text-[9px] font-mono text-indigo-400 tracking-wider">PHYSICS & SOFTWARE</span>
+                </div>
+            </a>
+
+            <div class="hidden md:flex items-center gap-8 text-xs font-semibold uppercase tracking-wider text-slate-400">
+                <a href="#about" class="hover:text-white transition-colors">About</a>
+                <a href="#projects" class="hover:text-white transition-colors">Projects</a>
+                <a href="#skills" class="hover:text-white transition-colors">Stack</a>
+                <a href="#simulator" class="hover:text-white transition-colors">CLI Terminal</a>
+                <a href="#contact" class="hover:text-white transition-colors">Contact</a>
+            </div>
+
+            <div class="flex items-center gap-3">
+                <a href="https://github.com/shadow-wave" target="_blank" rel="noopener noreferrer" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-slate-300 hover:text-white hover:border-indigo-500/50 hover:bg-indigo-600/10 transition-all">
+                    <i class="fa-brands fa-github text-sm"></i>
+                </a>
+                <a href="https://shadow-wave.github.io/Omni-pro/" target="_blank" rel="noopener noreferrer" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs transition-all active:scale-95 shadow-lg shadow-indigo-600/25">
+                    <i class="fa-solid fa-bolt text-[10px]"></i>
+                    <span>Omni-Studio</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- HERO SECTION -->
+    <header class="pt-32 pb-16 px-6 max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            <!-- Left Info Column -->
+            <div class="lg:col-span-7 space-y-6 text-left">
+                <div class="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-indigo-500/10 border border-indigo-500/25 text-indigo-300 text-xs font-mono font-semibold uppercase tracking-wider badge-glow">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Physics Undergrad • Computational Lab Builder</span>
+                </div>
+
+                <h1 class="text-4xl sm:text-6xl xl:text-7xl font-extrabold text-white tracking-tight leading-[1.08]">
+                    Synthesizing <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-400 to-pink-400 text-glow-indigo">Physics Mechanics</span> with Client-Side WebAssembly.
+                </h1>
+
+                <p class="text-slate-400 text-base sm:text-lg max-w-2xl leading-relaxed">
+                    Engineering offline-first scientific IDEs, numerical differential equation modeling, and high-performance interactive web tools with pure client-side execution.
+                </p>
+
+                <div class="flex flex-wrap items-center gap-4 pt-2">
+                    <a href="https://shadow-wave.github.io/Omni-pro/" target="_blank" rel="noopener noreferrer" class="px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-sm flex items-center gap-2.5 shadow-xl shadow-indigo-600/25 transition-all active:scale-95">
+                        <i class="fa-solid fa-rocket"></i>
+                        <span>Launch Omni-Studio Pro</span>
+                    </a>
+                    <a href="#projects" class="px-6 py-3.5 rounded-2xl glass-panel text-white font-bold text-sm flex items-center gap-2 hover:bg-white/10 transition-all active:scale-95">
+                        <i class="fa-solid fa-layer-group text-indigo-400"></i>
+                        <span>Explore Portfolio</span>
+                    </a>
+                </div>
+
+                <!-- Live Metrics Ticker -->
+                <div class="grid grid-cols-3 gap-4 pt-6 border-t border-white/5 max-w-lg">
+                    <div>
+                        <div class="text-2xl font-bold font-mono text-indigo-400">WASM</div>
+                        <div class="text-[11px] text-slate-400 font-medium">Pyodide Core Engine</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold font-mono text-purple-400">0 ms</div>
+                        <div class="text-[11px] text-slate-400 font-medium">Server Latency (Client-Run)</div>
+                    </div>
+                    <div>
+                        <div class="text-2xl font-bold font-mono text-emerald-400">Offline</div>
+                        <div class="text-[11px] text-slate-400 font-medium">PWA Caching Layer</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Interactive Web Terminal -->
+            <div class="lg:col-span-5">
+                <div class="glass-panel rounded-3xl overflow-hidden shadow-2xl border-indigo-500/25">
+                    <!-- Terminal Top Bar -->
+                    <div class="h-10 px-4 bg-white/5 border-b border-white/5 flex items-center justify-between">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full bg-rose-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-amber-500/80 inline-block"></span>
+                            <span class="w-3 h-3 rounded-full bg-emerald-500/80 inline-block"></span>
+                        </div>
+                        <div class="text-[11px] font-mono text-slate-400 flex items-center gap-1.5">
+                            <i class="fa-brands fa-linux text-indigo-400"></i>
+                            <span>aravind@fedora:~</span>
+                        </div>
+                        <div class="text-[10px] font-mono text-indigo-400 font-bold">BASH</div>
+                    </div>
+
+                    <!-- Terminal Output Window -->
+                    <div id="cli-output" class="p-5 font-mono text-xs text-slate-300 h-64 overflow-y-auto terminal-scroll space-y-2 leading-relaxed">
+                        <div class="text-indigo-400">>>> Omni-Terminal v4.2 [Physics & System Shell]</div>
+                        <div class="text-slate-400">Type <span class="text-emerald-400 font-bold">'help'</span> to inspect capabilities, or click commands below:</div>
+                        <div class="text-emerald-400 font-bold">$ ./init_bio.sh</div>
+                        <div class="text-slate-300">Name: Aravind O. K. | Undergrad in Physics</div>
+                        <div class="text-slate-300">Focus: Mathematical Mechanics, WASM, Pandas</div>
+                    </div>
+
+                    <!-- Quick Command Chips -->
+                    <div class="px-4 py-2 bg-black/40 border-t border-white/5 flex items-center gap-2 overflow-x-auto no-scrollbar">
+                        <button onclick="runCliCmd('run shm')" class="px-2.5 py-1 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-300 text-[10px] font-mono whitespace-nowrap transition">run shm</button>
+                        <button onclick="runCliCmd('skills')" class="px-2.5 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 text-[10px] font-mono whitespace-nowrap transition">skills</button>
+                        <button onclick="runCliCmd('projects')" class="px-2.5 py-1 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 text-[10px] font-mono whitespace-nowrap transition">projects</button>
+                        <button onclick="runCliCmd('clear')" class="px-2.5 py-1 rounded-lg bg-white/5 hover:bg-white/10 text-slate-400 text-[10px] font-mono whitespace-nowrap transition">clear</button>
+                    </div>
+
+                    <!-- Terminal Input Row -->
+                    <div class="p-3 bg-black/60 border-t border-white/5 flex items-center gap-2">
+                        <span class="text-emerald-400 font-mono text-xs font-bold">$</span>
+                        <input id="cli-input" type="text" placeholder="type a command..." class="flex-1 bg-transparent text-xs font-mono text-white outline-none border-none placeholder-slate-600">
+                        <button onclick="handleCliSubmit()" class="px-3 py-1 bg-indigo-600 text-white rounded-lg text-xs font-mono font-bold hover:bg-indigo-500 transition">Enter</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- SECTION: FEATURED PROJECTS & CODE ARCHITECTURE -->
+    <section id="projects" class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
+            <div>
+                <span class="text-xs font-bold font-mono uppercase tracking-[0.25em] text-indigo-400">Engineered Systems</span>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-1.5 tracking-tight">Core Deployments</h2>
+            </div>
+            
+            <!-- Category Filter Tabs -->
+            <div class="flex items-center gap-2 p-1.5 glass-panel rounded-2xl overflow-x-auto no-scrollbar">
+                <button onclick="filterProjects('all')" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold text-white bg-indigo-600 transition" data-category="all">All</button>
+                <button onclick="filterProjects('wasm')" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition" data-category="wasm">WASM & Physics</button>
+                <button onclick="filterProjects('games')" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition" data-category="games">Game Engines</button>
+                <button onclick="filterProjects('tools')" class="filter-btn px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition" data-category="tools">Utilities</button>
+            </div>
+        </div>
+
+        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            
+            <!-- PROJECT 1: Omni-Studio Pro (Flagship) -->
+            <div class="project-card glass-panel p-8 rounded-3xl flex flex-col justify-between relative overflow-hidden group border-indigo-500/30" data-type="wasm">
+                <div class="absolute -right-16 -top-16 w-56 h-56 bg-indigo-500/10 rounded-full blur-3xl group-hover:bg-indigo-500/20 transition-all duration-500"></div>
+                
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-600 to-purple-600 flex items-center justify-center text-white text-2xl shadow-xl">
+                            <i class="fa-solid fa-atom"></i>
+                        </div>
+                        <span class="px-3.5 py-1 rounded-full text-[10px] font-mono font-bold bg-indigo-500/20 text-indigo-300 border border-indigo-500/40">FLAGSHIP WASM IDE</span>
+                    </div>
+
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Omni-Studio Pro</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Full-fledged client-side Python 3.11 laboratory IDE. Mounts Pandas DataFrames, NumPy vector math, and high-DPI Spyder-styled Matplotlib visualizations directly in WebAssembly with a permanent offline Service Worker cache layer.
+                    </p>
+
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">Pyodide WASM</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">Pandas 2.0</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">Matplotlib</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">PWA Cache</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-6 border-t border-white/5">
+                    <a href="https://shadow-wave.github.io/Omni-pro/" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-indigo-600/20 transition active:scale-95">
+                        <i class="fa-solid fa-play text-[10px]"></i>
+                        <span>Live Launch</span>
+                    </a>
+                    <a href="https://github.com/shadow-wave/Omni-pro" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs flex items-center gap-2 transition border border-white/10">
+                        <i class="fa-brands fa-github"></i>
+                        <span>Repository</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- PROJECT 2: Computational Physics Simulations -->
+            <div class="project-card glass-panel p-8 rounded-3xl flex flex-col justify-between relative overflow-hidden group" data-type="wasm">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-purple-600/20 border border-purple-500/30 flex items-center justify-center text-purple-400 text-2xl shadow-inner">
+                            <i class="fa-solid fa-square-root-variable"></i>
+                        </div>
+                        <span class="px-3.5 py-1 rounded-full text-[10px] font-mono font-bold bg-purple-500/20 text-purple-300 border border-purple-500/30">NUMERICAL MECHANICS</span>
+                    </div>
+
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Computational Physics Suite</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Algorithmic physics simulations covering underdamped/driven harmonic wave propagation, nonlinear 2D projectile drag calculations via Euler ODE integration, and linear least-squares experimental regression models.
+                    </p>
+
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">Python 3.11</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">NumPy Array Ops</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">SciPy</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">ODE Euler</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-6 border-t border-white/5">
+                    <a href="https://github.com/shadow-wave/computational-physics-sims" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs flex items-center gap-2 transition border border-white/10">
+                        <i class="fa-brands fa-github"></i>
+                        <span>View Models</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- PROJECT 3: Monster RPG & Web Arcade -->
+            <div class="project-card glass-panel p-8 rounded-3xl flex flex-col justify-between relative overflow-hidden group" data-type="games">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-400 text-2xl shadow-inner">
+                            <i class="fa-solid fa-gamepad"></i>
+                        </div>
+                        <span class="px-3.5 py-1 rounded-full text-[10px] font-mono font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">CANVAS ENGINE</span>
+                    </div>
+
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Monster RPG & Web Arcade</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Custom 2D HTML5 Canvas game engine engineered with TypeScript. Features fixed-timestep game loops, multi-touch virtual joystick controllers, sprite collision mathematics, and persistent state storage.
+                    </p>
+
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">TypeScript</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">HTML5 Canvas</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">Touch Joystick</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-6 border-t border-white/5">
+                    <a href="https://github.com/shadow-wave/Monster-rpg" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs flex items-center gap-2 transition border border-white/10">
+                        <i class="fa-brands fa-github"></i>
+                        <span>Source Code</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- PROJECT 4: Deceptive Dash & Client Utilities -->
+            <div class="project-card glass-panel p-8 rounded-3xl flex flex-col justify-between relative overflow-hidden group" data-type="tools">
+                <div>
+                    <div class="flex items-center justify-between mb-6">
+                        <div class="w-14 h-14 rounded-2xl bg-pink-600/20 border border-pink-500/30 flex items-center justify-center text-pink-400 text-2xl shadow-inner">
+                            <i class="fa-solid fa-code"></i>
+                        </div>
+                        <span class="px-3.5 py-1 rounded-full text-[10px] font-mono font-bold bg-pink-500/20 text-pink-300 border border-pink-500/30">INTERACTIVE WEB</span>
+                    </div>
+
+                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-3">Deceptive Dash & App Hub</h3>
+                    <p class="text-slate-400 text-sm leading-relaxed mb-6">
+                        Responsive client-side games and lightweight web tools created with vanilla JavaScript and Tailwind CSS, prioritizing ultra-low latency and seamless viewport responsiveness.
+                    </p>
+
+                    <div class="flex flex-wrap gap-2 mb-8">
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">JavaScript ES6</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">Tailwind CSS</span>
+                        <span class="px-3 py-1 rounded-xl bg-white/5 text-slate-300 font-mono text-xs border border-white/5">Mobile UI</span>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3 pt-6 border-t border-white/5">
+                    <a href="https://github.com/shadow-wave/deceptive-dash" target="_blank" rel="noopener noreferrer" class="px-5 py-2.5 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 font-bold text-xs flex items-center gap-2 transition border border-white/10">
+                        <i class="fa-brands fa-github"></i>
+                        <span>Repository</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION: TECHNICAL STACK & PROFICIENCY MATRIX -->
+    <section id="skills" class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="text-center max-w-xl mx-auto mb-16">
+            <span class="text-xs font-bold font-mono uppercase tracking-[0.25em] text-indigo-400">Technical Capability</span>
+            <h2 class="text-3xl sm:text-5xl font-extrabold text-white mt-1.5 tracking-tight">Toolkit & Technologies</h2>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- Column 1 -->
+            <div class="glass-panel p-8 rounded-3xl space-y-6">
+                <div class="flex items-center gap-3 text-indigo-400 text-base font-bold uppercase tracking-wider">
+                    <i class="fa-brands fa-python text-xl"></i>
+                    <span>Programming & WASM</span>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1.5 text-slate-300">
+                            <span>Python (3.11+)</span>
+                            <span class="text-indigo-400">95%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-indigo-500 w-[95%]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1.5 text-slate-300">
+                            <span>Pyodide (WebAssembly)</span>
+                            <span class="text-indigo-400">90%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-indigo-500 w-[90%]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1.5 text-slate-300">
+                            <span>JavaScript (ES6+) / TypeScript</span>
+                            <span class="text-indigo-400">88%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-indigo-500 w-[88%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 2 -->
+            <div class="glass-panel p-8 rounded-3xl space-y-6">
+                <div class="flex items-center gap-3 text-purple-400 text-base font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-chart-line text-xl"></i>
+                    <span>Scientific Computing</span>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1.5 text-slate-300">
+                            <span>Pandas DataFrames</span>
+                            <span class="text-purple-400">94%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-purple-500 w-[94%]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1.5 text-slate-300">
+                            <span>NumPy Vector Math</span>
+                            <span class="text-purple-400">92%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-purple-500 w-[92%]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1.5 text-slate-300">
+                            <span>Matplotlib Visualizer</span>
+                            <span class="text-purple-400">96%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-purple-500 w-[96%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Column 3 -->
+            <div class="glass-panel p-8 rounded-3xl space-y-6">
+                <div class="flex items-center gap-3 text-emerald-400 text-base font-bold uppercase tracking-wider">
+                    <i class="fa-solid fa-terminal text-xl"></i>
+                    <span>Systems & Design</span>
+                </div>
+                <div class="space-y-4">
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1.5 text-slate-300">
+                            <span>Fedora Linux / KDE Shell</span>
+                            <span class="text-emerald-400">90%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 w-[90%]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1.5 text-slate-300">
+                            <span>PWA Service Worker Engine</span>
+                            <span class="text-emerald-400">92%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 w-[92%]"></div>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-mono mb-1.5 text-slate-300">
+                            <span>Tailwind CSS & UI Scaffolding</span>
+                            <span class="text-emerald-400">95%</span>
+                        </div>
+                        <div class="h-1.5 bg-white/5 rounded-full overflow-hidden">
+                            <div class="h-full bg-emerald-500 w-[95%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SECTION: ACADEMICS & COMMUNITY IMPACT -->
+    <section id="about" class="py-20 px-6 max-w-7xl mx-auto">
+        <div class="glass-panel p-8 sm:p-12 rounded-3xl border-indigo-500/25">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+                
+                <div class="lg:col-span-6 space-y-5">
+                    <span class="text-xs font-bold font-mono uppercase tracking-[0.25em] text-indigo-400">Academics & Mission</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Physics Scholar & Software Craftsman</h2>
+                    <p class="text-slate-300 text-sm leading-relaxed">
+                        Pursuing a Bachelor of Science in Physics at Mahatma Gandhi College, Iritty, Kannur, Kerala. My work revolves around combining classical mechanics, vector mathematics, and computational code to build zero-barrier educational software.
+                    </p>
+                    <div class="flex items-center gap-3 text-xs font-mono text-indigo-300 pt-2">
+                        <i class="fa-solid fa-map-pin text-rose-400"></i>
+                        <span>Kannur, Kerala, India</span>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="p-5 rounded-2xl bg-white/5 border border-white/5 space-y-2">
+                        <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-hand-holding-heart"></i>
+                        </div>
+                        <h4 class="text-sm font-bold text-white">NSS Volunteer</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Active volunteer across Units 30 & 63, organizing regional resource audits and community campaigns.
+                        </p>
+                    </div>
+
+                    <div class="p-5 rounded-2xl bg-white/5 border border-white/5 space-y-2">
+                        <div class="w-9 h-9 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-sm font-bold">
+                            <i class="fa-solid fa-microchip"></i>
+                        </div>
+                        <h4 class="text-sm font-bold text-white">WASM Advocate</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Creating offline web laboratories that eliminate high cloud hosting costs for students and researchers.
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION: DIRECT CONTACT & FOOTER -->
+    <section id="contact" class="py-24 px-6 max-w-4xl mx-auto text-center">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-600 flex items-center justify-center text-white text-2xl mx-auto mb-6 shadow-xl shadow-indigo-600/30">
+            <i class="fa-solid fa-paper-plane"></i>
+        </div>
+        
+        <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-4">Let's Build Something Exceptional</h2>
+        <p class="text-slate-400 text-sm sm:text-base max-w-lg mx-auto mb-10 leading-relaxed">
+            Open for collaborations on scientific software development, WebAssembly integration, or web application engineering.
+        </p>
+
+        <div class="flex flex-wrap items-center justify-center gap-4 mb-16">
+            <a href="mailto:aravindok6@gmail.com" class="px-6 py-3.5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs flex items-center gap-2.5 shadow-lg shadow-indigo-600/25 transition active:scale-95">
+                <i class="fa-solid fa-envelope"></i>
+                <span>aravindok6@gmail.com</span>
+            </a>
+            <a href="https://github.com/shadow-wave" target="_blank" rel="noopener noreferrer" class="px-6 py-3.5 rounded-2xl glass-panel text-white font-bold text-xs flex items-center gap-2.5 transition active:scale-95 border border-white/10 hover:bg-white/10">
+                <i class="fa-brands fa-github text-sm"></i>
+                <span>GitHub Profile</span>
+            </a>
+            <button onclick="copyContactEmail()" id="copy-email-btn" class="px-6 py-3.5 rounded-2xl glass-panel text-slate-300 font-bold text-xs flex items-center gap-2.5 transition active:scale-95 border border-white/10 hover:bg-white/10">
+                <i class="fa-regular fa-copy"></i>
+                <span>Copy Email</span>
+            </button>
+        </div>
+
+        <div class="pt-8 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-mono gap-4">
+            <div>© 2026 Aravind O. K. All rights reserved.</div>
+            <div class="flex items-center gap-6">
+                <a href="#projects" class="hover:text-slate-400 transition">Projects</a>
+                <a href="https://github.com/shadow-wave" class="hover:text-slate-400 transition">GitHub</a>
+                <a href="https://shadow-wave.github.io/Omni-pro/" class="hover:text-slate-400 transition">Omni-Studio</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
+    <script>
+        // ==========================================
+        // 1. DYNAMIC PHYSICS PARTICLE CANVAS
+        // ==========================================
+        const canvas = document.getElementById('physics-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let mouse = { x: null, y: null, radius: 120 };
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = (Math.random() - 0.5) * 0.6;
+                this.vy = (Math.random() - 0.5) * 0.6;
+                this.radius = Math.random() * 1.5 + 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > canvas.width) this.vx = -this.vx;
+                if (this.y < 0 || this.y > canvas.height) this.vy = -this.vy;
+
+                // Mouse gravity repulsion
+                if (mouse.x !== null) {
+                    let dx = mouse.x - this.x;
+                    let dy = mouse.y - this.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < mouse.radius) {
+                        let force = (mouse.radius - dist) / mouse.radius;
+                        this.x -= (dx / dist) * force * 2;
+                        this.y -= (dy / dist) * force * 2;
+                    }
+                }
+            }
+            draw() {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(99, 102, 241, 0.4)';
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(window.innerWidth / 16, 70);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = 0; i < particles.length; i++) {
+                particles[i].update();
+                particles[i].draw();
+
+                // Draw connecting strings
+                for (let j = i + 1; j < particles.length; j++) {
+                    let dx = particles[i].x - particles[j].x;
+                    let dy = particles[i].y - particles[j].y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 100) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = `rgba(99, 102, 241, ${0.15 * (1 - dist / 100)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // ==========================================
+        // 2. INTERACTIVE HERO CLI TERMINAL
+        // ==========================================
+        const cliOutput = document.getElementById('cli-output');
+        const cliInput = document.getElementById('cli-input');
+
+        const cliCommands = {
+            'help': 'Available commands:\n • run shm     : Simulates Damped Harmonic Wave\n • skills      : Outputs developer proficiency stack\n • projects    : Lists core repositories and live links\n • about       : Brief biographical overview\n • clear       : Wipes terminal output buffer',
+            'about': 'Aravind O. K.\nUndergraduate Physics Scholar @ MG College Iritty\nInterests: WebAssembly, Numerical Solvers, Pandas, Interactive Canvas Tools',
+            'skills': 'Languages : Python 3.11, JavaScript ES6+, TypeScript, C++\nScientific: Pandas, NumPy, Matplotlib, SciPy, Differential Solvers\nPlatforms : Linux (Fedora/KDE), WebAssembly (Pyodide), PWA Cache',
+            'projects': '1. Omni-Studio Pro [https://shadow-wave.github.io/Omni-pro/]\n2. Physics Simulation Suite [github.com/shadow-wave/computational-physics-sims]\n3. Monster RPG Canvas Engine [github.com/shadow-wave/Monster-rpg]',
+            'run shm': 'Simulating Underdamped Harmonic Oscillator ODE...\nFormula : y(t) = exp(-γt) · cos(ωt)\nγ=0.15 | ω0=2.00 rad/s\nt=0.0s -> y=+1.000\nt=2.5s -> y=-0.687\nt=5.0s -> y=+0.472\nt=7.5s -> y=-0.324\n[Simulation Completed: 0 Errors, RMS Fit = 0.9998]',
+            'clear': 'CLEAR'
+        };
+
+        function printCli(text, isCmd = false) {
+            const div = document.createElement('div');
+            div.className = isCmd ? 'text-emerald-400 font-bold' : 'text-slate-300 whitespace-pre-wrap';
+            div.innerText = isCmd ? `$ ${text}` : text;
+            cliOutput.appendChild(div);
+            cliOutput.scrollTop = cliOutput.scrollHeight;
+        }
+
+        function runCliCmd(cmd) {
+            const clean = cmd.trim().toLowerCase();
+            printCli(cmd, true);
+            if (clean === 'clear') {
+                cliOutput.innerHTML = '<div class="text-indigo-400">>>> Omni-Terminal Buffer Cleared</div>';
+                return;
+            }
+            if (cliCommands[clean]) {
+                printCli(cliCommands[clean]);
+            } else {
+                printCli(`Command not found: '${clean}'. Type 'help' for command list.`);
+            }
+        }
+
+        function handleCliSubmit() {
+            const val = cliInput.value.trim();
+            if (!val) return;
+            runCliCmd(val);
+            cliInput.value = '';
+        }
+
+        cliInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleCliSubmit();
+        });
+
+        // ==========================================
+        // 3. DYNAMIC PROJECT CATEGORY FILTER
+        // ==========================================
+        function filterProjects(category) {
+            const cards = document.querySelectorAll('.project-card');
+            const btns = document.querySelectorAll('.filter-btn');
+
+            btns.forEach(btn => {
+                const isActive = btn.dataset.category === category;
+                btn.classList.toggle('bg-indigo-600', isActive);
+                btn.classList.toggle('text-white', isActive);
+                btn.classList.toggle('text-slate-400', !isActive);
+            });
+
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.type === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // ==========================================
+        // 4. COPY EMAIL CLIPBOARD ACTION
+        // ==========================================
+        function copyContactEmail() {
+            navigator.clipboard.writeText('aravindok6@gmail.com').then(() => {
+                const btn = document.getElementById('copy-email-btn');
+                btn.innerHTML = '<i class="fa-solid fa-check text-emerald-400"></i><span class="text-emerald-400">Copied!</span>';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fa-regular fa-copy"></i><span>Copy Email</span>';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
