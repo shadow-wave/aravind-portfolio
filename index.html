@@ -3,17 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#07090e" />
-  <title>Aravind O K | Computational Physics & Interactive Systems</title>
+  <meta name="theme-color" content="#05070a" />
+  <title>Aravind O K | Computational Physics, WebAssembly & Interactive Systems</title>
   
-  <!-- Tailwind CSS & Lucide Icons -->
+  <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Lucide Icons CDN -->
   <script src="https://unpkg.com/lucide@latest"></script>
   
-  <!-- Google Fonts -->
+  <!-- KaTeX for Physics LaTeX Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+  <!-- Google Fonts: Plus Jakarta Sans & Fira Code -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,600;0,800;0,900;1,400&display=swap" rel="stylesheet">
   
   <script>
     tailwind.config = {
@@ -26,27 +32,32 @@
           },
           colors: {
             quantum: {
-              950: '#05070a',
-              900: '#080c14',
-              850: '#0d1322',
-              800: '#11192e',
-              border: 'rgba(56, 189, 248, 0.15)',
+              950: '#04060a',
+              900: '#080c16',
+              850: '#0e1526',
+              800: '#141d33',
+              700: '#1e2945',
               cyan: '#38bdf8',
               purple: '#a855f7',
               pink: '#ec4899',
               emerald: '#10b981',
               amber: '#f59e0b',
+              blue: '#6366f1'
             }
           },
           animation: {
-            'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-            'spin-slow': 'spin 20s linear infinite',
-            'wave-float': 'float 6s ease-in-out infinite',
+            'spin-slow': 'spin 25s linear infinite',
+            'float-slow': 'float 7s ease-in-out infinite',
+            'pulse-glow': 'pulseGlow 3s ease-in-out infinite',
           },
           keyframes: {
             float: {
               '0%, 100%': { transform: 'translateY(0px)' },
-              '50%': { transform: 'translateY(-10px)' },
+              '50%': { transform: 'translateY(-12px)' },
+            },
+            pulseGlow: {
+              '0%, 100%': { opacity: '0.4', filter: 'drop-shadow(0 0 15px rgba(56, 189, 248, 0.4))' },
+              '50%': { opacity: '0.8', filter: 'drop-shadow(0 0 30px rgba(168, 85, 247, 0.7))' },
             }
           }
         }
@@ -55,43 +66,60 @@
   </script>
 
   <style>
-    /* Custom Scrollbar */
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #05070a; }
-    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #04060a; }
+    ::-webkit-scrollbar-thumb { background: #1e2945; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #a855f7; }
 
-    /* Glassmorphic Cyber Panels */
-    .quantum-panel {
-      background: rgba(13, 19, 34, 0.65);
+    /* Glassmorphism & Cyber Overlays */
+    .quantum-card {
+      background: rgba(14, 21, 38, 0.72);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .quantum-panel:hover {
-      border-color: rgba(56, 189, 248, 0.3);
-      box-shadow: 0 0 25px rgba(56, 189, 248, 0.12);
+    .quantum-card:hover {
+      border-color: rgba(56, 189, 248, 0.35);
+      box-shadow: 0 0 35px rgba(168, 85, 247, 0.18);
+      transform: translateY(-4px);
     }
 
-    /* Scanline Overlay for Cyberpunk HUD */
+    .hud-border {
+      position: relative;
+    }
+    .hud-border::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 12px; height: 12px;
+      border-top: 2px solid #38bdf8;
+      border-left: 2px solid #38bdf8;
+    }
+    .hud-border::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0; width: 12px; height: 12px;
+      border-bottom: 2px solid #a855f7;
+      border-right: 2px solid #a855f7;
+    }
+
+    .glow-text-cyan { text-shadow: 0 0 16px rgba(56, 189, 248, 0.6); }
+    .glow-text-purple { text-shadow: 0 0 16px rgba(168, 85, 247, 0.6); }
+
     .scanlines {
-      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
       background-size: 100% 3px, 6px 100%;
     }
 
-    /* Glow Text */
-    .glow-cyan { text-shadow: 0 0 16px rgba(56, 189, 248, 0.6); }
-    .glow-purple { text-shadow: 0 0 16px rgba(168, 85, 247, 0.6); }
-
-    /* Interactive Cursor Spotlight */
-    #cursor-glow {
+    #cursor-light {
       position: fixed;
       pointer-events: none;
-      width: 600px;
-      height: 600px;
+      width: 700px;
+      height: 700px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, rgba(56, 189, 248, 0.04) 40%, transparent 70%);
+      background: radial-gradient(circle, rgba(168, 85, 247, 0.07) 0%, rgba(56, 189, 248, 0.03) 45%, transparent 70%);
       transform: translate(-50%, -50%);
       z-index: 1;
       transition: opacity 0.3s;
@@ -101,62 +129,64 @@
 
 <body class="bg-quantum-950 text-slate-200 font-sans antialiased overflow-x-hidden selection:bg-purple-600 selection:text-white">
 
-  <!-- Interactive Spotlight -->
-  <div id="cursor-glow"></div>
+  <!-- Interactive Dynamic Backgrounds -->
+  <div id="cursor-light"></div>
+  <canvas id="ambient-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-50"></canvas>
+  <div class="fixed inset-0 scanlines pointer-events-none z-0 opacity-30"></div>
 
-  <!-- Interactive Background Canvas (Double Wave & Gravity Mechanics) -->
-  <canvas id="bg-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
-  <div class="fixed inset-0 scanlines pointer-events-none z-0 opacity-40"></div>
-
-  <!-- Top System Telemetry HUD Bar -->
-  <header class="fixed top-0 inset-x-0 z-50 quantum-panel border-b border-slate-800/80 px-4 md:px-8 py-3">
+  <!-- TOP SYSTEM HUD BAR -->
+  <header class="fixed top-0 inset-x-0 z-50 quantum-card border-b border-slate-800/80 px-4 md:px-8 py-3.5">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
       
-      <!-- Brand & Status -->
+      <!-- Brand & Identity -->
       <div class="flex items-center gap-4">
-        <a href="#" class="flex items-center gap-2.5 group">
-          <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 p-[1.5px] group-hover:shadow-[0_0_15px_rgba(56,189,248,0.5)] transition duration-300">
-            <div class="w-full h-full bg-quantum-900 rounded-[7px] flex items-center justify-center font-mono font-black text-cyan-400 text-sm">
+        <a href="#" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-purple-600 via-indigo-500 to-cyan-400 p-[1.5px] group-hover:shadow-[0_0_20px_rgba(56,189,248,0.6)] transition duration-300">
+            <div class="w-full h-full bg-quantum-900 rounded-[10px] flex items-center justify-center font-mono font-black text-cyan-400 text-sm">
               AK
             </div>
           </div>
-          <div class="hidden sm:block">
-            <span class="font-mono text-xs font-bold tracking-wider text-slate-200 group-hover:text-cyan-400 transition">ARAVIND O K</span>
-            <span class="block text-[10px] font-mono text-slate-500">shadow-wave // v3.4.0</span>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="font-mono text-xs font-bold tracking-wider text-white group-hover:text-cyan-400 transition">ARAVIND O K</span>
+              <span class="px-1.5 py-0.5 rounded bg-cyan-500/10 border border-cyan-500/20 text-[9px] font-mono text-cyan-400">DEV://ONLINE</span>
+            </div>
+            <span class="text-[10px] font-mono text-slate-500 hidden sm:block">shadow-wave // Physics & Interactive Engines</span>
           </div>
         </a>
 
-        <div class="h-4 w-[1px] bg-slate-800 hidden md:block"></div>
+        <div class="h-5 w-[1px] bg-slate-800 hidden md:block"></div>
 
-        <!-- Real-time HUD Status -->
+        <!-- Telemetry Feed -->
         <div class="hidden lg:flex items-center gap-3 font-mono text-[11px] text-slate-400">
           <span class="flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            SYS: ONLINE (LINUX/FEDORA)
+            SYS: LINUX (FEDORA)
           </span>
-          <span class="text-slate-600">|</span>
-          <span id="fps-counter" class="text-purple-400">FPS: 60</span>
-          <span class="text-slate-600">|</span>
-          <span id="utc-clock" class="text-cyan-400 font-semibold">00:00:00 UTC</span>
+          <span class="text-slate-700">|</span>
+          <span id="hud-fps" class="text-purple-400">FPS: 60</span>
+          <span class="text-slate-700">|</span>
+          <span id="hud-utc" class="text-cyan-400 font-semibold">00:00:00 UTC</span>
         </div>
       </div>
 
-      <!-- Navigation & Action Sound Trigger -->
+      <!-- Navigation & Action Sound Switch -->
       <div class="flex items-center gap-3 md:gap-6">
         <nav class="hidden md:flex items-center gap-6 font-mono text-xs text-slate-300">
-          <a href="#lab" class="hover:text-cyan-400 transition flex items-center gap-1.5"><i data-lucide="atom" class="w-3.5 h-3.5 text-cyan-400"></i> Physics Lab</a>
+          <a href="#simulations" class="hover:text-cyan-400 transition flex items-center gap-1.5"><i data-lucide="atom" class="w-3.5 h-3.5 text-cyan-400"></i> Sim Labs</a>
           <a href="#terminal" class="hover:text-purple-400 transition flex items-center gap-1.5"><i data-lucide="terminal" class="w-3.5 h-3.5 text-purple-400"></i> Terminal</a>
           <a href="#projects" class="hover:text-pink-400 transition flex items-center gap-1.5"><i data-lucide="cpu" class="w-3.5 h-3.5 text-pink-400"></i> Builds</a>
-          <a href="#matrix" class="hover:text-emerald-400 transition flex items-center gap-1.5"><i data-lucide="database" class="w-3.5 h-3.5 text-emerald-400"></i> Stack</a>
+          <a href="#benchmarks" class="hover:text-amber-400 transition flex items-center gap-1.5"><i data-lucide="gauge" class="w-3.5 h-3.5 text-amber-400"></i> Benchmarks</a>
+          <a href="#stack" class="hover:text-emerald-400 transition flex items-center gap-1.5"><i data-lucide="layers" class="w-3.5 h-3.5 text-emerald-400"></i> Stack</a>
         </nav>
 
-        <!-- Sound FX Synth Toggle -->
-        <button id="sound-btn" onclick="toggleAudio()" class="p-2 rounded-lg bg-quantum-850 border border-slate-800 hover:border-cyan-400/50 text-slate-400 hover:text-cyan-400 transition font-mono text-xs flex items-center gap-1.5" title="Toggle Synthesizer Sound FX">
-          <i data-lucide="volume-2" id="sound-icon" class="w-4 h-4"></i>
-          <span class="hidden xl:inline text-[10px]" id="sound-status">SFX: OFF</span>
+        <!-- Web Audio Synthesizer Toggle -->
+        <button id="synth-btn" onclick="toggleAudioEngine()" class="p-2 md:px-3 rounded-lg bg-quantum-850 border border-slate-800 hover:border-cyan-400/50 text-slate-400 hover:text-cyan-400 transition font-mono text-xs flex items-center gap-2">
+          <i data-lucide="volume-2" id="synth-icon" class="w-4 h-4"></i>
+          <span class="hidden sm:inline text-[10px]" id="synth-status">AUDIO: OFF</span>
         </button>
 
-        <a href="mailto:aravindok6@gmail.com" class="relative group px-4 py-2 rounded-lg font-mono text-xs font-semibold text-white overflow-hidden shadow-lg transition">
+        <a href="mailto:aravindok6@gmail.com" onclick="playAudioTone('beep')" class="relative group px-4 py-2 rounded-lg font-mono text-xs font-semibold text-white overflow-hidden shadow-lg transition">
           <span class="absolute inset-0 bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 group-hover:opacity-90 transition"></span>
           <span class="relative flex items-center gap-1.5"><i data-lucide="send" class="w-3.5 h-3.5"></i> CONNECT</span>
         </a>
@@ -164,214 +194,261 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- HERO VIEWPORT -->
   <main class="relative z-10 pt-28 md:pt-36">
-    <section class="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-20 flex flex-col items-center text-center">
+    <section class="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-24 flex flex-col items-center text-center">
       
-      <!-- Status Badge -->
-      <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full quantum-panel border-purple-500/30 text-purple-300 font-mono text-xs mb-8 animate-wave-float">
+      <!-- Top Badge -->
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full quantum-card border-purple-500/30 text-purple-300 font-mono text-xs mb-8 animate-float-slow">
         <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
-        <span>THEORETICAL MECHANICS × WEBASSEMBLY RUNTIMES</span>
+        <span>COMPUTATIONAL MECHANICS &bull; WEBASSEMBLY &bull; CLIENT ENGINES</span>
       </div>
 
-      <!-- Main Headline -->
-      <h1 class="text-4xl sm:text-6xl md:text-8xl font-black tracking-tight text-white max-w-5xl leading-[1.08] mb-8 font-sans">
-        Engineering Software From <br class="hidden sm:inline" />
-        <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent glow-purple">
-          First Principles.
+      <!-- Main Master Heading -->
+      <h1 class="text-4xl sm:text-6xl md:text-8xl font-black tracking-tight text-white max-w-5xl leading-[1.06] mb-8 font-sans">
+        Turning Theoretical Physics Into <br class="hidden sm:inline" />
+        <span class="bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-400 bg-clip-text text-transparent glow-text-purple">
+          Interactive Software.
         </span>
       </h1>
 
-      <!-- Dynamic Typing Subtitle -->
-      <div class="font-mono text-sm sm:text-lg md:text-xl text-slate-300 max-w-3xl min-h-[50px] mb-10 flex items-center justify-center gap-2">
+      <!-- Dynamic Typing HUD -->
+      <div class="font-mono text-sm sm:text-lg md:text-xl text-slate-300 max-w-3xl min-h-[55px] mb-10 flex items-center justify-center gap-2">
         <span class="text-cyan-400 font-bold">&gt;</span>
-        <span id="hero-typing" class="border-r-2 border-cyan-400 pr-1"></span>
+        <span id="typing-matrix" class="border-r-2 border-cyan-400 pr-1"></span>
       </div>
 
-      <!-- Hero Actions -->
-      <div class="flex flex-wrap justify-center gap-4 mb-16">
-        <a href="#lab" onclick="playSound('click')" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:shadow-[0_0_25px_rgba(168,85,247,0.5)] text-white font-mono text-sm font-semibold flex items-center gap-2 transition duration-300">
-          <i data-lucide="play" class="w-4 h-4 fill-current"></i> Launch Simulation Lab
+      <!-- Hero Call-To-Actions -->
+      <div class="flex flex-wrap justify-center gap-4 mb-20">
+        <a href="#simulations" onclick="playAudioTone('click')" class="px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 hover:shadow-[0_0_30px_rgba(168,85,247,0.5)] text-white font-mono text-sm font-semibold flex items-center gap-2.5 transition duration-300">
+          <i data-lucide="play" class="w-4 h-4 fill-current"></i> Launch Physics Engine
         </a>
-        <a href="#terminal" onclick="playSound('click')" class="px-7 py-3.5 rounded-xl quantum-panel hover:border-cyan-400/60 text-slate-200 font-mono text-sm font-semibold flex items-center gap-2 transition duration-300">
-          <i data-lucide="terminal" class="w-4 h-4 text-cyan-400"></i> Open Linux Console
+        <a href="#terminal" onclick="playAudioTone('click')" class="px-8 py-4 rounded-xl quantum-card hover:border-cyan-400/60 text-slate-200 font-mono text-sm font-semibold flex items-center gap-2.5 transition duration-300">
+          <i data-lucide="terminal" class="w-4 h-4 text-cyan-400"></i> Open ZSH Console
         </a>
-        <a href="https://github.com/shadow-wave" target="_blank" onclick="playSound('click')" class="px-5 py-3.5 rounded-xl quantum-panel hover:border-pink-400/60 text-slate-300 font-mono text-sm flex items-center gap-2 transition duration-300">
+        <a href="https://github.com/shadow-wave" target="_blank" onclick="playAudioTone('click')" class="px-6 py-4 rounded-xl quantum-card hover:border-pink-400/60 text-slate-300 font-mono text-sm flex items-center gap-2.5 transition duration-300">
           <i data-lucide="github" class="w-4 h-4 text-pink-400"></i> shadow-wave
         </a>
       </div>
 
-      <!-- Quick Metrics Counter Matrix -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
-        <div class="quantum-panel p-5 rounded-2xl text-left border-l-2 border-l-cyan-400">
-          <div class="text-slate-400 font-mono text-xs mb-1 uppercase tracking-wider">Computation</div>
-          <div class="text-2xl md:text-3xl font-black text-white font-mono">Wasm/Pyodide</div>
-          <div class="text-slate-500 text-xs mt-1">Client Python & Pandas</div>
+      <!-- Telemetry Matrix Counters -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-5xl">
+        <div class="quantum-card p-6 rounded-2xl text-left border-l-4 border-l-cyan-400">
+          <div class="text-slate-400 font-mono text-xs mb-1 uppercase tracking-wider">Computation Core</div>
+          <div class="text-2xl md:text-3xl font-black text-white font-mono">WebAssembly</div>
+          <div class="text-slate-500 text-xs mt-1">Pyodide, In-Browser Python</div>
         </div>
-        <div class="quantum-panel p-5 rounded-2xl text-left border-l-2 border-l-purple-400">
-          <div class="text-slate-400 font-mono text-xs mb-1 uppercase tracking-wider">Graphics API</div>
-          <div class="text-2xl md:text-3xl font-black text-white font-mono">HTML5 60FPS</div>
-          <div class="text-slate-500 text-xs mt-1">Direct Canvas & Shaders</div>
+        <div class="quantum-card p-6 rounded-2xl text-left border-l-4 border-l-purple-400">
+          <div class="text-slate-400 font-mono text-xs mb-1 uppercase tracking-wider">Simulation Speed</div>
+          <div class="text-2xl md:text-3xl font-black text-white font-mono">60 FPS Native</div>
+          <div class="text-slate-500 text-xs mt-1">Direct 2D & WebGL Solvers</div>
         </div>
-        <div class="quantum-panel p-5 rounded-2xl text-left border-l-2 border-l-pink-400">
+        <div class="quantum-card p-6 rounded-2xl text-left border-l-4 border-l-pink-400">
           <div class="text-slate-400 font-mono text-xs mb-1 uppercase tracking-wider">Architecture</div>
-          <div class="text-2xl md:text-3xl font-black text-white font-mono">Offline-1st</div>
-          <div class="text-slate-500 text-xs mt-1">Zero Backend Reliance</div>
+          <div class="text-2xl md:text-3xl font-black text-white font-mono">Offline-First</div>
+          <div class="text-slate-500 text-xs mt-1">0ms Cloud Latency</div>
         </div>
-        <div class="quantum-panel p-5 rounded-2xl text-left border-l-2 border-l-emerald-400">
-          <div class="text-slate-400 font-mono text-xs mb-1 uppercase tracking-wider">Core Science</div>
+        <div class="quantum-card p-6 rounded-2xl text-left border-l-4 border-l-emerald-400">
+          <div class="text-slate-400 font-mono text-xs mb-1 uppercase tracking-wider">Foundations</div>
           <div class="text-2xl md:text-3xl font-black text-white font-mono">B.Sc Physics</div>
-          <div class="text-slate-500 text-xs mt-1">Mechanics & Field Theory</div>
+          <div class="text-slate-500 text-xs mt-1">Mechanics, ODEs & Wave Optics</div>
         </div>
       </div>
     </section>
 
-    <!-- SECTION 1: Real-Time Interactive Physics Lab / Wave Engine -->
-    <section id="lab" class="max-w-7xl mx-auto px-4 md:px-8 py-20">
+    <!-- SECTION 1: DUAL-ENGINE INTERACTIVE SIMULATION LAB -->
+    <section id="simulations" class="max-w-7xl mx-auto px-4 md:px-8 py-20">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
         <div>
           <div class="flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-2">
-            <i data-lucide="activity" class="w-4 h-4"></i> Live Numerical Solver
+            <i data-lucide="atom" class="w-4 h-4"></i> Laboratory Viewport
           </div>
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Interactive 2D Wave Lab</h2>
-          <p class="text-slate-400 text-sm mt-1">Click or drag directly inside the grid to generate perturbation packets.</p>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Interactive Numerical Physics Labs</h2>
+          <p class="text-slate-400 text-sm mt-1">Toggle between discrete 2D Wave PDE simulation and N-Body Gravitational Mechanics.</p>
         </div>
 
-        <!-- Simulation Presets -->
-        <div class="flex flex-wrap gap-2 font-mono text-xs">
-          <button onclick="setSimMode('doubleSlit'); playSound('beep');" class="px-3.5 py-1.5 rounded-lg bg-quantum-850 border border-slate-700 hover:border-cyan-400 text-slate-300 hover:text-cyan-400 transition">
-            Double Slit Barrier
+        <!-- Engine Mode Switcher -->
+        <div class="flex flex-wrap gap-2 font-mono text-xs bg-quantum-900 p-1.5 rounded-xl border border-slate-800">
+          <button id="tab-wave-btn" onclick="switchLabMode('wave')" class="px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold shadow transition">
+            2D Wave Solver
           </button>
-          <button onclick="setSimMode('harmonic'); playSound('beep');" class="px-3.5 py-1.5 rounded-lg bg-quantum-850 border border-slate-700 hover:border-purple-400 text-slate-300 hover:text-purple-400 transition">
-            Harmonic Well
+          <button id="tab-gravity-btn" onclick="switchLabMode('gravity')" class="px-4 py-2 rounded-lg text-slate-400 hover:text-white transition">
+            N-Body Gravitation (RK4)
           </button>
-          <button onclick="clearSim(); playSound('beep');" class="px-3.5 py-1.5 rounded-lg bg-quantum-850 border border-pink-500/40 text-pink-400 hover:bg-pink-500/10 transition">
-            Clear Grid
+          <button id="tab-lorenz-btn" onclick="switchLabMode('lorenz')" class="px-4 py-2 rounded-lg text-slate-400 hover:text-white transition">
+            Lorenz Chaos Attractor
           </button>
         </div>
       </div>
 
-      <!-- The Lab Sandbox Card -->
-      <div class="quantum-panel rounded-3xl p-4 md:p-6 border border-slate-800 relative overflow-hidden">
+      <!-- MAIN SIMULATION CARD CONTAINER -->
+      <div class="quantum-card rounded-3xl p-4 md:p-6 border border-slate-800 relative overflow-hidden">
         
-        <!-- Controls HUD -->
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 font-mono text-xs">
-          <div class="bg-quantum-900/90 p-3 rounded-xl border border-slate-800/80">
-            <label class="text-slate-400 block mb-1">Damping Factor ($γ$)</label>
-            <input type="range" id="sim-damping" min="0.95" max="0.999" step="0.001" value="0.985" class="w-full accent-cyan-400 cursor-pointer">
+        <!-- LAB 1: 2D WAVE PDE SOLVER -->
+        <div id="wave-lab-container">
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4 font-mono text-xs">
+            <div class="bg-quantum-900/90 p-3 rounded-xl border border-slate-800">
+              <label class="text-slate-400 block mb-1">Damping ($γ$)</label>
+              <input type="range" id="wave-damping" min="0.95" max="0.999" step="0.001" value="0.988" class="w-full accent-cyan-400 cursor-pointer">
+            </div>
+            <div class="bg-quantum-900/90 p-3 rounded-xl border border-slate-800">
+              <label class="text-slate-400 block mb-1">Propagation Speed ($c$)</label>
+              <input type="range" id="wave-speed" min="0.1" max="0.8" step="0.05" value="0.45" class="w-full accent-purple-400 cursor-pointer">
+            </div>
+            <div class="bg-quantum-900/90 p-3 rounded-xl border border-slate-800">
+              <label class="text-slate-400 block mb-1">Barrier Configuration</label>
+              <select id="wave-preset" onchange="setWaveBarrier(this.value)" class="w-full bg-quantum-950 text-slate-200 rounded p-1 border border-slate-800 focus:outline-none">
+                <option value="doubleSlit">Double Slit Barrier</option>
+                <option value="singleSlit">Single Slit Aperture</option>
+                <option value="harmonic">Harmonic Boundary</option>
+                <option value="none">Open Dispersion Field</option>
+              </select>
+            </div>
+            <div class="bg-quantum-900/90 p-3 rounded-xl border border-slate-800 flex items-center justify-between">
+              <span class="text-slate-400">Harmonic Emitter</span>
+              <button id="emitter-switch" onclick="toggleWaveEmitter()" class="px-3 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px]">ACTIVE</button>
+            </div>
           </div>
-          <div class="bg-quantum-900/90 p-3 rounded-xl border border-slate-800/80">
-            <label class="text-slate-400 block mb-1">Wave Velocity ($c$)</label>
-            <input type="range" id="sim-speed" min="0.1" max="0.9" step="0.05" value="0.45" class="w-full accent-purple-400 cursor-pointer">
-          </div>
-          <div class="bg-quantum-900/90 p-3 rounded-xl border border-slate-800/80">
-            <label class="text-slate-400 block mb-1">Frequency Generator</label>
-            <input type="range" id="sim-freq" min="0.02" max="0.3" step="0.02" value="0.12" class="w-full accent-pink-400 cursor-pointer">
-          </div>
-          <div class="bg-quantum-900/90 p-3 rounded-xl border border-slate-800/80 flex items-center justify-between">
-            <span class="text-slate-400">Continuous Emitter</span>
-            <button id="emitter-btn" onclick="toggleEmitter()" class="px-3 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px]">ACTIVE</button>
+
+          <div class="relative w-full h-[450px] md:h-[500px] bg-black rounded-2xl overflow-hidden border border-slate-900 cursor-crosshair">
+            <canvas id="wave-canvas" class="w-full h-full"></canvas>
+            <div class="absolute bottom-3 left-4 font-mono text-[11px] text-cyan-400 bg-quantum-950/90 px-3 py-1.5 rounded-lg border border-cyan-400/30 pointer-events-none">
+              Equation: $\frac{\partial^2 u}{\partial t^2} = c^2 \left( \frac{\partial^2 u}{\partial x^2} + \frac{\partial^2 u}{\partial y^2} \right) - \gamma \frac{\partial u}{\partial t}$
+            </div>
+            <div class="absolute top-3 right-4 font-mono text-[10px] text-slate-400 bg-quantum-950/80 px-2.5 py-1 rounded-md border border-slate-800 pointer-events-none">
+              [CLICK & DRAG TO GENERATE PACKETS]
+            </div>
           </div>
         </div>
 
-        <!-- Render Viewport -->
-        <div class="relative w-full h-[400px] md:h-[480px] bg-black rounded-2xl overflow-hidden border border-slate-900 cursor-crosshair">
-          <canvas id="sim-canvas" class="w-full h-full"></canvas>
-          
-          <div class="absolute bottom-3 left-4 font-mono text-[10px] text-cyan-400 bg-quantum-950/80 px-2.5 py-1 rounded-md border border-cyan-400/30 pointer-events-none">
-            PDE: $\frac{\partial^2 u}{\partial t^2} = c^2 \nabla^2 u - \gamma \frac{\partial u}{\partial t}$
+        <!-- LAB 2: N-BODY GRAVITY MECHANICS (RK4) -->
+        <div id="gravity-lab-container" class="hidden">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4 font-mono text-xs">
+            <div class="flex items-center gap-2">
+              <button onclick="resetGravitySystem('solar')" class="px-3 py-1.5 rounded-lg bg-quantum-900 border border-slate-700 hover:border-cyan-400 text-slate-300 hover:text-cyan-400 transition">Preset: Orbital System</button>
+              <button onclick="resetGravitySystem('threeBody')" class="px-3 py-1.5 rounded-lg bg-quantum-900 border border-slate-700 hover:border-purple-400 text-slate-300 hover:text-purple-400 transition">Preset: Chaotic 3-Body</button>
+              <button onclick="resetGravitySystem('galaxy')" class="px-3 py-1.5 rounded-lg bg-quantum-900 border border-slate-700 hover:border-pink-400 text-slate-300 hover:text-pink-400 transition">Preset: Galaxy Disk</button>
+            </div>
+            <div class="flex items-center gap-4 text-slate-400">
+              <label class="flex items-center gap-1.5 cursor-pointer">
+                <input type="checkbox" id="grav-trails" checked class="accent-cyan-400"> Orbit Trails
+              </label>
+              <button onclick="clearGravityBodies()" class="px-3 py-1.5 rounded bg-pink-500/20 text-pink-400 border border-pink-500/30">Clear Field</button>
+            </div>
           </div>
-          <div class="absolute top-3 right-4 font-mono text-[10px] text-slate-400 bg-quantum-950/80 px-2.5 py-1 rounded-md border border-slate-800 pointer-events-none">
-            [CLICK & DRAG TO DISPLACE]
+
+          <div class="relative w-full h-[450px] md:h-[500px] bg-quantum-950 rounded-2xl overflow-hidden border border-slate-900 cursor-crosshair">
+            <canvas id="gravity-canvas" class="w-full h-full"></canvas>
+            <div class="absolute bottom-3 left-4 font-mono text-[11px] text-purple-400 bg-quantum-950/90 px-3 py-1.5 rounded-lg border border-purple-400/30 pointer-events-none">
+              Mechanics: $\vec{F}_{ij} = G \frac{m_i m_j}{(|\vec{r}_{ij}|^2 + \epsilon^2)^{3/2}} \vec{r}_{ij}$ (Symplectic Verlet Integrator)
+            </div>
+            <div class="absolute top-3 right-4 font-mono text-[10px] text-slate-400 bg-quantum-950/80 px-2.5 py-1 rounded-md border border-slate-800 pointer-events-none">
+              [CLICK & FLING TO LAUNCH ORBITAL MASS]
+            </div>
           </div>
         </div>
+
+        <!-- LAB 3: LORENZ ATTRACTOR 3D PROJECTION -->
+        <div id="lorenz-lab-container" class="hidden">
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-4 font-mono text-xs">
+            <div class="flex items-center gap-3">
+              <span class="text-slate-400">Chaos Parameters: $\sigma=10, \rho=28, \beta=\frac{8}{3}$</span>
+            </div>
+            <button onclick="resetLorenz()" class="px-3 py-1.5 rounded-lg bg-quantum-900 border border-cyan-500/30 text-cyan-400">Re-seed Trajectory</button>
+          </div>
+
+          <div class="relative w-full h-[450px] md:h-[500px] bg-quantum-950 rounded-2xl overflow-hidden border border-slate-900">
+            <canvas id="lorenz-canvas" class="w-full h-full"></canvas>
+            <div class="absolute bottom-3 left-4 font-mono text-[11px] text-emerald-400 bg-quantum-950/90 px-3 py-1.5 rounded-lg border border-emerald-400/30 pointer-events-none">
+              Differential System: $\dot{x}=\sigma(y-x), \quad \dot{y}=x(\rho-z)-y, \quad \dot{z}=xy-\beta z$
+            </div>
+            <div class="absolute top-3 right-4 font-mono text-[10px] text-slate-400 bg-quantum-950/80 px-2.5 py-1 rounded-md border border-slate-800 pointer-events-none">
+              [DRAG TO ROTATE 3D PERSPECTIVE]
+            </div>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- SECTION 2: Integrated Interactive Linux Terminal Console -->
+    <!-- SECTION 2: INTERACTIVE LINUX TERMINAL (ZSH EMULATOR) -->
     <section id="terminal" class="max-w-7xl mx-auto px-4 md:px-8 py-20">
       <div class="mb-8">
         <div class="flex items-center gap-2 text-purple-400 font-mono text-xs uppercase tracking-widest mb-2">
-          <i data-lucide="terminal" class="w-4 h-4"></i> Shell Interface
+          <i data-lucide="terminal" class="w-4 h-4"></i> Shell Environment
         </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Interactive Neofetch Terminal</h2>
-        <p class="text-slate-400 text-sm mt-1">Execute commands directly. Type <code class="text-cyan-400">help</code> for the command list.</p>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Interactive Linux Console Engine</h2>
+        <p class="text-slate-400 text-sm mt-1">Full terminal emulator. Type <code class="text-cyan-400">help</code> for executable commands.</p>
       </div>
 
-      <div class="quantum-panel rounded-2xl overflow-hidden border border-slate-800 shadow-2xl font-mono text-xs md:text-sm">
-        
-        <!-- Terminal Header Bar -->
+      <div class="quantum-card rounded-2xl overflow-hidden border border-slate-800 shadow-2xl font-mono text-xs md:text-sm">
         <div class="bg-quantum-900 px-4 py-3 border-b border-slate-800 flex items-center justify-between">
           <div class="flex items-center gap-2">
             <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
             <div class="w-3 h-3 rounded-full bg-amber-500/80"></div>
             <div class="w-3 h-3 rounded-full bg-emerald-500/80"></div>
-            <span class="ml-2 text-slate-400 text-xs">aravind@shadow-wave: ~ (zsh/pyodide)</span>
+            <span class="ml-2 text-slate-400 text-xs">aravind@shadow-wave: ~ (zsh/pyodide-wasm)</span>
           </div>
-          <div class="text-[11px] text-slate-500 hidden sm:block">KDE Plasma 6.1 // Fedora Core</div>
+          <div class="text-[11px] text-slate-500 hidden sm:block">KDE Plasma // Fedora 40 x86_64</div>
         </div>
 
-        <!-- Terminal Body -->
-        <div id="terminal-body" class="p-6 h-96 overflow-y-auto bg-quantum-950/95 space-y-3 scroll-smooth text-slate-300">
+        <div id="shell-output" class="p-6 h-96 overflow-y-auto bg-quantum-950/95 space-y-3 scroll-smooth text-slate-300">
           <div class="text-slate-400">
-            Welcome to Aravind O K's interactive shell v3.4. Type <span class="text-cyan-400 font-bold">help</span> to view executable commands or <span class="text-purple-400 font-bold">neofetch</span> for the system breakdown.
+            Welcome to Aravind O K's interactive dev shell. Type <span class="text-cyan-400 font-bold">help</span> to view commands or <span class="text-purple-400 font-bold">neofetch</span> for machine specs.
           </div>
         </div>
 
-        <!-- Terminal Prompt Input -->
         <div class="bg-quantum-900/90 px-6 py-3.5 border-t border-slate-800 flex items-center gap-2">
           <span class="text-purple-400 font-bold">aravind@shadow-wave:~$</span>
-          <input type="text" id="terminal-input" autocomplete="off" spellcheck="false" class="w-full bg-transparent text-cyan-300 focus:outline-none font-mono" placeholder="Type a command (e.g. neofetch, skills, projects, contact, clear)..." />
+          <input type="text" id="shell-input" autocomplete="off" spellcheck="false" class="w-full bg-transparent text-cyan-300 focus:outline-none font-mono" placeholder="Type command here..." />
         </div>
       </div>
     </section>
 
-    <!-- SECTION 3: Featured Flagship Engineering Builds -->
+    <!-- SECTION 3: FLAGSHIP ENGINEERING BUILDS -->
     <section id="projects" class="max-w-7xl mx-auto px-4 md:px-8 py-20">
       <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
         <div>
           <div class="flex items-center gap-2 text-pink-400 font-mono text-xs uppercase tracking-widest mb-2">
-            <i data-lucide="folder-git-2" class="w-4 h-4"></i> Production Repositories
+            <i data-lucide="folder-git-2" class="w-4 h-4"></i> Production Architectures
           </div>
-          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Flagship Builds & Architectures</h2>
-          <p class="text-slate-400 text-sm mt-1">High-performance client engines, simulation suites, and creative workstations.</p>
+          <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Flagship Repositories & Engineering</h2>
+          <p class="text-slate-400 text-sm mt-1">High-performance client tools, canvas engines, and mathematical systems.</p>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         
-        <!-- CARD 1: Omni-Pro IDE -->
-        <div class="quantum-panel rounded-3xl p-7 md:p-8 flex flex-col justify-between group">
+        <!-- PROJECT 1: Omni-Pro IDE -->
+        <div class="quantum-card rounded-3xl p-7 md:p-8 flex flex-col justify-between group">
           <div>
             <div class="flex justify-between items-start mb-6">
-              <div class="p-3 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
-                <i data-lucide="code-2" class="w-6 h-6"></i>
+              <div class="p-3.5 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
+                <i data-lucide="terminal-square" class="w-6 h-6"></i>
               </div>
-              <div class="flex items-center gap-3">
-                <a href="https://github.com/shadow-wave/Omni-pro" target="_blank" onclick="playSound('click')" class="p-2.5 rounded-xl bg-quantum-900 border border-slate-800 hover:border-cyan-400 text-slate-400 hover:text-white transition">
-                  <i data-lucide="github" class="w-4 h-4"></i>
-                </a>
-              </div>
+              <a href="https://github.com/shadow-wave/Omni-pro" target="_blank" onclick="playAudioTone('click')" class="p-2.5 rounded-xl bg-quantum-900 border border-slate-800 hover:border-cyan-400 text-slate-400 hover:text-white transition">
+                <i data-lucide="github" class="w-4 h-4"></i>
+              </a>
             </div>
 
             <span class="text-xs font-mono text-cyan-400 uppercase tracking-wider font-semibold">WebAssembly / Pyodide Core</span>
             <h3 class="text-2xl font-bold text-white mt-1 mb-3 group-hover:text-cyan-400 transition">Omni-Pro Scientific IDE</h3>
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
-              Offline-first computational environment executing Python, NumPy array operations, Pandas DataFrames, and live Matplotlib canvas charting directly inside client V8 memory via WebAssembly.
+              Offline-first computational environment executing Python, NumPy array operations, Pandas DataFrames, and real-time Matplotlib visualizations directly in client browser memory with zero backend latency.
             </p>
 
             <div class="space-y-2 mb-6 text-xs font-mono text-slate-300 bg-quantum-900/60 p-4 rounded-xl border border-slate-800">
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">Architecture:</span>
-                <span class="text-cyan-300">Pyodide WASM Runtime</span>
+                <span class="text-slate-500">Core Runtime:</span>
+                <span class="text-cyan-300">Pyodide WASM V8 Engine</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">Latency:</span>
-                <span class="text-emerald-400">0ms Server Round-Trip</span>
+                <span class="text-slate-500">Execution Overhead:</span>
+                <span class="text-emerald-400">0ms Cloud Latency</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">Data Visualizer:</span>
-                <span class="text-purple-300">Client Matplotlib Hooks</span>
+                <span class="text-slate-500">Visualization:</span>
+                <span class="text-purple-300">Direct In-Memory Matplotlib Hooks</span>
               </div>
             </div>
           </div>
@@ -380,124 +457,118 @@
             <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">Python 3.11</span>
             <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">WebAssembly</span>
             <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">NumPy</span>
-            <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">Tailwind CSS</span>
+            <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">Pandas</span>
           </div>
         </div>
 
-        <!-- CARD 2: ArtGrid Studio Pro -->
-        <div class="quantum-panel rounded-3xl p-7 md:p-8 flex flex-col justify-between group">
+        <!-- PROJECT 2: ArtGrid Studio Pro -->
+        <div class="quantum-card rounded-3xl p-7 md:p-8 flex flex-col justify-between group">
           <div>
             <div class="flex justify-between items-start mb-6">
-              <div class="p-3 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
+              <div class="p-3.5 rounded-2xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
                 <i data-lucide="grid" class="w-6 h-6"></i>
               </div>
-              <div class="flex items-center gap-3">
-                <a href="https://github.com/shadow-wave/ArtGrid-Studio-Pro" target="_blank" onclick="playSound('click')" class="p-2.5 rounded-xl bg-quantum-900 border border-slate-800 hover:border-purple-400 text-slate-400 hover:text-white transition">
-                  <i data-lucide="github" class="w-4 h-4"></i>
-                </a>
-              </div>
+              <a href="https://github.com/shadow-wave/ArtGrid-Studio-Pro" target="_blank" onclick="playAudioTone('click')" class="p-2.5 rounded-xl bg-quantum-900 border border-slate-800 hover:border-purple-400 text-slate-400 hover:text-white transition">
+                <i data-lucide="github" class="w-4 h-4"></i>
+              </a>
             </div>
 
             <span class="text-xs font-mono text-purple-400 uppercase tracking-wider font-semibold">Canvas Coordinate Engine</span>
             <h3 class="text-2xl font-bold text-white mt-1 mb-3 group-hover:text-purple-400 transition">ArtGrid Studio Pro</h3>
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
-              Pixel-accurate coordinate mapping and ratio transformation tool built for portraitists, technical drafters, and caricature artists to draft proportion overlays with high precision.
+              High-accuracy coordinate mapping and ratio transformation tool built for portraitists, technical drafters, and caricature artists to draft proportion overlays with high precision.
             </p>
 
             <div class="space-y-2 mb-6 text-xs font-mono text-slate-300 bg-quantum-900/60 p-4 rounded-xl border border-slate-800">
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">Pipeline:</span>
-                <span class="text-purple-300">Direct 2D Canvas Context</span>
+                <span class="text-slate-500">Context:</span>
+                <span class="text-purple-300">HTML5 2D Canvas Layering</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">Ratio Engine:</span>
+                <span class="text-slate-500">Transform Engine:</span>
                 <span class="text-cyan-300">Affine Coordinate Transform</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-slate-500">Export:</span>
-                <span class="text-pink-300">High-DPI Lossless Buffer</span>
+                <span class="text-pink-300">Lossless High-DPI Canvas Buffer</span>
               </div>
             </div>
           </div>
 
           <div class="flex flex-wrap gap-2 pt-4 border-t border-slate-800/80 text-xs font-mono">
-            <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">HTML5 Canvas</span>
+            <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">Canvas API</span>
             <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">Geometry Math</span>
-            <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">ES6+</span>
+            <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">JavaScript ES6+</span>
           </div>
         </div>
 
-        <!-- CARD 3: Pokemon Champions Arena -->
-        <div class="quantum-panel rounded-3xl p-7 md:p-8 flex flex-col justify-between group">
+        <!-- PROJECT 3: Pokemon Champions Arena -->
+        <div class="quantum-card rounded-3xl p-7 md:p-8 flex flex-col justify-between group">
           <div>
             <div class="flex justify-between items-start mb-6">
-              <div class="p-3 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
+              <div class="p-3.5 rounded-2xl bg-pink-500/10 border border-pink-500/20 text-pink-400">
                 <i data-lucide="gamepad-2" class="w-6 h-6"></i>
               </div>
-              <div class="flex items-center gap-3">
-                <a href="https://github.com/shadow-wave/pokemon-champions-arena" target="_blank" onclick="playSound('click')" class="p-2.5 rounded-xl bg-quantum-900 border border-slate-800 hover:border-pink-400 text-slate-400 hover:text-white transition">
-                  <i data-lucide="github" class="w-4 h-4"></i>
-                </a>
-              </div>
+              <a href="https://github.com/shadow-wave/pokemon-champions-arena" target="_blank" onclick="playAudioTone('click')" class="p-2.5 rounded-xl bg-quantum-900 border border-slate-800 hover:border-pink-400 text-slate-400 hover:text-white transition">
+                <i data-lucide="github" class="w-4 h-4"></i>
+              </a>
             </div>
 
-            <span class="text-xs font-mono text-pink-400 uppercase tracking-wider font-semibold">Deterministic State Machine</span>
+            <span class="text-xs font-mono text-pink-400 uppercase tracking-wider font-semibold">Finite State Machine Loop</span>
             <h3 class="text-2xl font-bold text-white mt-1 mb-3 group-hover:text-pink-400 transition">Pokemon Champions Arena</h3>
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
-              Browser battle arena featuring synchronized game loops, deterministic turn queues, bounding-box collision detection, sprite animation cycles, and customized combat balance algorithms.
+              Deterministic arena engine featuring synchronous game ticks, hit-box collision calculations, state machine turn transitions, and custom animation cycles.
             </p>
 
             <div class="space-y-2 mb-6 text-xs font-mono text-slate-300 bg-quantum-900/60 p-4 rounded-xl border border-slate-800">
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">Core Loop:</span>
+                <span class="text-slate-500">Tick Engine:</span>
                 <span class="text-pink-300">RequestAnimationFrame Delta Sync</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">State Tree:</span>
-                <span class="text-cyan-300">Finite State Machine (FSM)</span>
+                <span class="text-slate-500">State Matrix:</span>
+                <span class="text-cyan-300">Deterministic FSM Routing</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">Audio:</span>
+                <span class="text-slate-500">Audio Architecture:</span>
                 <span class="text-emerald-300">Web Audio API Sound Engine</span>
               </div>
             </div>
           </div>
 
           <div class="flex flex-wrap gap-2 pt-4 border-t border-slate-800/80 text-xs font-mono">
-            <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">Game Logic</span>
+            <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">Game Loop</span>
             <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">FSM Architecture</span>
             <span class="px-2.5 py-1 rounded-md bg-quantum-900 text-slate-300 border border-slate-800">CSS Keyframes</span>
           </div>
         </div>
 
-        <!-- CARD 4: Zen_PDF -->
-        <div class="quantum-panel rounded-3xl p-7 md:p-8 flex flex-col justify-between group">
+        <!-- PROJECT 4: Zen_PDF -->
+        <div class="quantum-card rounded-3xl p-7 md:p-8 flex flex-col justify-between group">
           <div>
             <div class="flex justify-between items-start mb-6">
-              <div class="p-3 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
+              <div class="p-3.5 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                 <i data-lucide="file-text" class="w-6 h-6"></i>
               </div>
-              <div class="flex items-center gap-3">
-                <a href="https://github.com/shadow-wave/Zen_PDF" target="_blank" onclick="playSound('click')" class="p-2.5 rounded-xl bg-quantum-900 border border-slate-800 hover:border-emerald-400 text-slate-400 hover:text-white transition">
-                  <i data-lucide="github" class="w-4 h-4"></i>
-                </a>
-              </div>
+              <a href="https://github.com/shadow-wave/Zen_PDF" target="_blank" onclick="playAudioTone('click')" class="p-2.5 rounded-xl bg-quantum-900 border border-slate-800 hover:border-emerald-400 text-slate-400 hover:text-white transition">
+                <i data-lucide="github" class="w-4 h-4"></i>
+              </a>
             </div>
 
-            <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider font-semibold">Minimalist Document Engine</span>
+            <span class="text-xs font-mono text-emerald-400 uppercase tracking-wider font-semibold">Document Workflow Engine</span>
             <h3 class="text-2xl font-bold text-white mt-1 mb-3 group-hover:text-emerald-400 transition">Zen_PDF</h3>
             <p class="text-slate-400 text-sm leading-relaxed mb-6">
-              Focused client-side PDF document manipulation workspace designed for rapid offline rendering, distraction-free reading, and academic physics research paper review.
+              Client-side document manipulation workspace designed for rapid offline rendering, distraction-free reading, and academic physics research paper review.
             </p>
 
             <div class="space-y-2 mb-6 text-xs font-mono text-slate-300 bg-quantum-900/60 p-4 rounded-xl border border-slate-800">
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">Security:</span>
-                <span class="text-emerald-300">100% Client-Side In-Memory</span>
+                <span class="text-slate-500">Security Model:</span>
+                <span class="text-emerald-300">100% In-Memory (Zero Uploads)</span>
               </div>
               <div class="flex items-center justify-between">
-                <span class="text-slate-500">Storage:</span>
-                <span class="text-cyan-300">IndexedDB Local Cache</span>
+                <span class="text-slate-500">Offline Caching:</span>
+                <span class="text-cyan-300">IndexedDB Blob Storage</span>
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-slate-500">UI Stack:</span>
@@ -516,89 +587,155 @@
       </div>
     </section>
 
-    <!-- SECTION 4: Tech Stack & Skill Matrix -->
-    <section id="matrix" class="max-w-7xl mx-auto px-4 md:px-8 py-20">
+    <!-- SECTION 4: IN-BROWSER HARDWARE & JAVASCRIPT BENCHMARK SUITE -->
+    <section id="benchmarks" class="max-w-7xl mx-auto px-4 md:px-8 py-20">
+      <div class="mb-10 text-center max-w-3xl mx-auto">
+        <div class="inline-flex items-center gap-2 text-amber-400 font-mono text-xs uppercase tracking-widest mb-2">
+          <i data-lucide="gauge" class="w-4 h-4"></i> Client Performance Suite
+        </div>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Real-Time Browser Engine Benchmarks</h2>
+        <p class="text-slate-400 text-sm mt-1">Run live mathematical stress tests directly in your browser's V8 JavaScript runtime.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 font-mono text-xs">
+        
+        <!-- Benchmark 1: Monte Carlo Pi -->
+        <div class="quantum-card p-6 rounded-2xl border-t-2 border-t-cyan-400">
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-bold text-white text-sm">Monte Carlo $\pi$ Convergence</span>
+            <i data-lucide="target" class="w-4 h-4 text-cyan-400"></i>
+          </div>
+          <p class="text-slate-400 text-[11px] mb-4">Calculates $\pi$ via $10^7$ stochastic coordinate samplings inside a unit circle.</p>
+          <div class="bg-quantum-900 p-3 rounded-xl border border-slate-800 mb-4 space-y-1 text-[11px]">
+            <div class="flex justify-between"><span class="text-slate-500">Samples:</span> <span class="text-slate-300">10,000,000</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Approximation:</span> <span id="bench-pi-val" class="text-cyan-400 font-bold">---</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Execution Time:</span> <span id="bench-pi-time" class="text-emerald-400 font-bold">---</span></div>
+          </div>
+          <button onclick="runPiBenchmark()" id="bench-pi-btn" class="w-full py-2.5 rounded-lg bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-300 border border-cyan-500/40 font-bold transition">
+            Execute $10^7$ Samplings
+          </button>
+        </div>
+
+        <!-- Benchmark 2: Matrix Multiplication -->
+        <div class="quantum-card p-6 rounded-2xl border-t-2 border-t-purple-400">
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-bold text-white text-sm">$400 \times 400$ Matrix Multiplication</span>
+            <i data-lucide="matrix" class="w-4 h-4 text-purple-400"></i>
+          </div>
+          <p class="text-slate-400 text-[11px] mb-4">Stress-tests $O(N^3)$ computational throughput with floating-point matrix arrays.</p>
+          <div class="bg-quantum-900 p-3 rounded-xl border border-slate-800 mb-4 space-y-1 text-[11px]">
+            <div class="flex justify-between"><span class="text-slate-500">Dimension:</span> <span class="text-slate-300">400 &times; 400 (Float64)</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Operations:</span> <span class="text-purple-400 font-bold">64,000,000 FLOPs</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Compute Time:</span> <span id="bench-mat-time" class="text-emerald-400 font-bold">---</span></div>
+          </div>
+          <button onclick="runMatrixBenchmark()" id="bench-mat-btn" class="w-full py-2.5 rounded-lg bg-purple-500/20 hover:bg-purple-500/30 text-purple-300 border border-purple-500/40 font-bold transition">
+            Execute Matrix Product
+          </button>
+        </div>
+
+        <!-- Benchmark 3: Fast Fourier Transform (FFT) -->
+        <div class="quantum-card p-6 rounded-2xl border-t-2 border-t-pink-400">
+          <div class="flex items-center justify-between mb-4">
+            <span class="font-bold text-white text-sm">Complex FFT Synthesis</span>
+            <i data-lucide="activity" class="w-4 h-4 text-pink-400"></i>
+          </div>
+          <p class="text-slate-400 text-[11px] mb-4">Computes a 16,384-point Cooley-Tukey Discrete Fourier Transform in pure JS.</p>
+          <div class="bg-quantum-900 p-3 rounded-xl border border-slate-800 mb-4 space-y-1 text-[11px]">
+            <div class="flex justify-between"><span class="text-slate-500">Points:</span> <span class="text-slate-300">16,384 Complex</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">Spectral Peak:</span> <span id="bench-fft-val" class="text-pink-400 font-bold">---</span></div>
+            <div class="flex justify-between"><span class="text-slate-500">FFT Duration:</span> <span id="bench-fft-time" class="text-emerald-400 font-bold">---</span></div>
+          </div>
+          <button onclick="runFftBenchmark()" id="bench-fft-btn" class="w-full py-2.5 rounded-lg bg-pink-500/20 hover:bg-pink-500/30 text-pink-300 border border-pink-500/40 font-bold transition">
+            Run Cooley-Tukey FFT
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- SECTION 5: MATHEMATICAL PHYSICS & APPLIED STACK -->
+    <section id="stack" class="max-w-7xl mx-auto px-4 md:px-8 py-20">
       <div class="mb-12 text-center max-w-3xl mx-auto">
         <div class="inline-flex items-center gap-2 text-cyan-400 font-mono text-xs uppercase tracking-widest mb-2">
-          <i data-lucide="cpu" class="w-4 h-4"></i> Ecosystem Breakdown
+          <i data-lucide="layers" class="w-4 h-4"></i> Core Stack
         </div>
-        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Computational & Engineering Stack</h2>
+        <h2 class="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">Mathematical & Engineering Matrix</h2>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- Category 1: Mathematical Physics & Logic -->
-        <div class="quantum-panel p-6 rounded-3xl border-t-2 border-t-cyan-400">
+        <!-- Category 1 -->
+        <div class="quantum-card p-6 rounded-3xl border-t-2 border-t-cyan-400">
           <div class="flex items-center gap-3 mb-6">
             <div class="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400"><i data-lucide="atom" class="w-5 h-5"></i></div>
             <h3 class="font-bold text-white text-lg">Mathematical Physics</h3>
           </div>
           <ul class="space-y-3 font-mono text-xs text-slate-300">
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>Classical Mechanics & Chaos</span>
               <span class="text-cyan-400 font-bold">Advanced</span>
             </li>
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>Vector Calculus & PDEs</span>
               <span class="text-cyan-400 font-bold">Advanced</span>
             </li>
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>Wave Optics & Interference</span>
               <span class="text-cyan-400 font-bold">Specialist</span>
             </li>
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
-              <span>Numerical Integration (RK4)</span>
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
+              <span>Numerical Solvers (RK4, Verlet)</span>
               <span class="text-cyan-400 font-bold">Proficient</span>
             </li>
           </ul>
         </div>
 
-        <!-- Category 2: WebAssembly & Frontend -->
-        <div class="quantum-panel p-6 rounded-3xl border-t-2 border-t-purple-400">
+        <!-- Category 2 -->
+        <div class="quantum-card p-6 rounded-3xl border-t-2 border-t-purple-400">
           <div class="flex items-center gap-3 mb-6">
             <div class="p-2.5 rounded-xl bg-purple-500/10 text-purple-400"><i data-lucide="binary" class="w-5 h-5"></i></div>
-            <h3 class="font-bold text-white text-lg">Wasm & Web Architecture</h3>
+            <h3 class="font-bold text-white text-lg">Wasm & Web Systems</h3>
           </div>
           <ul class="space-y-3 font-mono text-xs text-slate-300">
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>Pyodide & Wasm Runtimes</span>
               <span class="text-purple-400 font-bold">Expert</span>
             </li>
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>JavaScript (ES6+) / Engine Ops</span>
               <span class="text-purple-400 font-bold">Advanced</span>
             </li>
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>HTML5 Canvas 2D / Animation</span>
               <span class="text-purple-400 font-bold">Advanced</span>
             </li>
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>Tailwind CSS Architecture</span>
               <span class="text-purple-400 font-bold">Mastery</span>
             </li>
           </ul>
         </div>
 
-        <!-- Category 3: Systems & Tooling -->
-        <div class="quantum-panel p-6 rounded-3xl border-t-2 border-t-pink-400">
+        <!-- Category 3 -->
+        <div class="quantum-card p-6 rounded-3xl border-t-2 border-t-pink-400">
           <div class="flex items-center gap-3 mb-6">
             <div class="p-2.5 rounded-xl bg-pink-500/10 text-pink-400"><i data-lucide="terminal" class="w-5 h-5"></i></div>
-            <h3 class="font-bold text-white text-lg">OS & Engineering Tools</h3>
+            <h3 class="font-bold text-white text-lg">OS & Tooling</h3>
           </div>
           <ul class="space-y-3 font-mono text-xs text-slate-300">
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>Fedora Linux / KDE Plasma</span>
               <span class="text-pink-400 font-bold">Power User</span>
             </li>
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>Git & GitHub Action Workflows</span>
               <span class="text-pink-400 font-bold">Advanced</span>
             </li>
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>Python (Pandas, Matplotlib)</span>
               <span class="text-pink-400 font-bold">Advanced</span>
             </li>
-            <li class="flex items-center justify-between p-2 rounded-lg bg-quantum-900/60">
+            <li class="flex items-center justify-between p-2.5 rounded-xl bg-quantum-900/60 border border-slate-800/80">
               <span>Android Studio / UI Overlays</span>
               <span class="text-pink-400 font-bold">Proficient</span>
             </li>
@@ -608,22 +745,22 @@
       </div>
     </section>
 
-    <!-- SECTION 5: Contact Matrix -->
+    <!-- SECTION 6: CONTACT & TRANSMIT -->
     <section class="max-w-4xl mx-auto px-4 md:px-8 py-24 text-center">
-      <div class="quantum-panel p-10 md:p-14 rounded-3xl relative overflow-hidden border border-purple-500/30">
-        <div class="absolute -right-16 -bottom-16 w-64 h-64 rounded-full bg-purple-600/10 filter blur-3xl pointer-events-none"></div>
-        <div class="absolute -left-16 -top-16 w-64 h-64 rounded-full bg-cyan-400/10 filter blur-3xl pointer-events-none"></div>
+      <div class="quantum-card p-10 md:p-14 rounded-3xl relative overflow-hidden border border-purple-500/30">
+        <div class="absolute -right-20 -bottom-20 w-80 h-80 rounded-full bg-purple-600/15 filter blur-3xl pointer-events-none"></div>
+        <div class="absolute -left-20 -top-20 w-80 h-80 rounded-full bg-cyan-400/15 filter blur-3xl pointer-events-none"></div>
 
-        <h2 class="text-3xl md:text-5xl font-black text-white mb-4">Let's Build Something High-Velocity.</h2>
+        <h2 class="text-3xl md:text-5xl font-black text-white mb-4">Let's Engineer High-Velocity Software.</h2>
         <p class="text-slate-400 text-sm md:text-base max-w-xl mx-auto mb-8 leading-relaxed">
-          Open to technical collaborations on computational simulations, browser game engines, WebAssembly tooling, or scientific web applications.
+          Open to collaborations on computational simulation suites, browser game engines, WebAssembly execution frameworks, or mathematical scientific tools.
         </p>
 
         <div class="flex flex-wrap justify-center gap-4 font-mono text-xs">
-          <a href="mailto:aravindok6@gmail.com" onclick="playSound('click')" class="px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 text-white font-bold hover:shadow-[0_0_30px_rgba(56,189,248,0.4)] transition">
+          <a href="mailto:aravindok6@gmail.com" onclick="playAudioTone('click')" class="px-8 py-4 rounded-xl bg-gradient-to-r from-purple-600 via-indigo-600 to-cyan-500 text-white font-bold hover:shadow-[0_0_35px_rgba(56,189,248,0.5)] transition">
             aravindok6@gmail.com
           </a>
-          <a href="https://github.com/shadow-wave" target="_blank" onclick="playSound('click')" class="px-8 py-4 rounded-xl bg-quantum-900 border border-slate-700 hover:border-cyan-400 text-slate-200 font-bold transition flex items-center gap-2">
+          <a href="https://github.com/shadow-wave" target="_blank" onclick="playAudioTone('click')" class="px-8 py-4 rounded-xl bg-quantum-900 border border-slate-700 hover:border-cyan-400 text-slate-200 font-bold transition flex items-center gap-2">
             <i data-lucide="github" class="w-4 h-4"></i> GitHub Profile
           </a>
         </div>
@@ -631,51 +768,55 @@
     </section>
   </main>
 
-  <!-- Footer -->
-  <footer class="quantum-panel border-t border-slate-800 py-8 px-6 text-center text-xs font-mono text-slate-500">
+  <!-- FOOTER -->
+  <footer class="quantum-card border-t border-slate-800 py-8 px-6 text-center text-xs font-mono text-slate-500">
     <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
       <div>© 2026 Aravind O K (shadow-wave). All rights reserved.</div>
       <div class="flex items-center gap-4 text-slate-400">
-        <span>Discrete Wave Solver: 60FPS</span>
-        <span>•</span>
-        <span>Built with Tailwind + WebAudio API</span>
+        <span>Numerical PDEs: 60FPS</span>
+        <span>&bull;</span>
+        <span>Built with Tailwind + Web Audio API</span>
       </div>
     </div>
   </footer>
 
-  <!-- SCRIPT ENGINE: Simulation, Terminal, Audio Synth, and Canvas -->
+  <!-- SCRIPT ENGINES -->
   <script>
-    // Initialize Lucide Icons
+    // Initialize Lucide Icons & Render MathJax / KaTeX
     lucide.createIcons();
+    document.addEventListener("DOMContentLoaded", () => {
+      if (window.renderMathInElement) {
+        renderMathInElement(document.body);
+      }
+    });
 
     /* ==========================================================================
-       1. WEB AUDIO SYNTHESIZER ENGINE (Procedural Sound FX)
+       1. WEB AUDIO SYNTHESIZER ENGINE (Procedural Sound Generation)
        ========================================================================== */
     let audioCtx = null;
-    let soundEnabled = false;
+    let isSoundOn = false;
 
-    function toggleAudio() {
+    function toggleAudioEngine() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
-      soundEnabled = !soundEnabled;
-      const icon = document.getElementById('sound-icon');
-      const status = document.getElementById('sound-status');
-      
-      if (soundEnabled) {
+      isSoundOn = !isSoundOn;
+      const icon = document.getElementById('synth-icon');
+      const status = document.getElementById('synth-status');
+
+      if (isSoundOn) {
         if (audioCtx.state === 'suspended') audioCtx.resume();
         icon.classList.add('text-cyan-400');
-        status.innerText = 'SFX: ON';
-        playSound('beep');
+        status.innerText = 'AUDIO: ON';
+        playAudioTone('beep');
       } else {
         icon.classList.remove('text-cyan-400');
-        status.innerText = 'SFX: OFF';
+        status.innerText = 'AUDIO: OFF';
       }
     }
 
-    function playSound(type) {
-      if (!soundEnabled || !audioCtx) return;
-      
+    function playAudioTone(type) {
+      if (!isSoundOn || !audioCtx) return;
       const now = audioCtx.currentTime;
       const osc = audioCtx.createOscillator();
       const gain = audioCtx.createGain();
@@ -684,259 +825,471 @@
 
       if (type === 'click') {
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(800, now);
-        osc.frequency.exponentialRampToValueAtTime(300, now + 0.04);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.linearRampToValueAtTime(0, now + 0.04);
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.exponentialRampToValueAtTime(220, now + 0.05);
+        gain.gain.setValueAtTime(0.12, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.05);
         osc.start(now);
-        osc.stop(now + 0.04);
+        osc.stop(now + 0.05);
       } else if (type === 'beep') {
         osc.type = 'triangle';
-        osc.frequency.setValueAtTime(587.33, now); // D5
-        osc.frequency.setValueAtTime(880, now + 0.05); // A5
-        gain.gain.setValueAtTime(0.1, now);
-        gain.gain.linearRampToValueAtTime(0, now + 0.12);
+        osc.frequency.setValueAtTime(523.25, now); // C5
+        osc.frequency.setValueAtTime(659.25, now + 0.04); // E5
+        gain.gain.setValueAtTime(0.08, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.1);
         osc.start(now);
-        osc.stop(now + 0.12);
+        osc.stop(now + 0.1);
       } else if (type === 'term') {
         osc.type = 'square';
-        osc.frequency.setValueAtTime(440, now);
-        gain.gain.setValueAtTime(0.04, now);
-        gain.gain.linearRampToValueAtTime(0, now + 0.03);
+        osc.frequency.setValueAtTime(350, now);
+        gain.gain.setValueAtTime(0.03, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.025);
         osc.start(now);
-        osc.stop(now + 0.03);
+        osc.stop(now + 0.025);
       }
     }
 
     /* ==========================================================================
-       2. DYNAMIC TYPING HEADLINE ENGINE
+       2. DYNAMIC HEADLINE TYPING ENGINE
        ========================================================================== */
-    const typePhrases = [
-      "Solving 2D Wave Equations & PDEs in Real-Time.",
+    const typingPhrases = [
+      "Solving 2D Wave Equations & PDEs in real time.",
       "Executing Python & Pandas in-browser via WebAssembly.",
-      "Architecting Deterministic Canvas Game Loops.",
-      "Bridging Mathematical Rigor with Modern Web Systems."
+      "Architecting deterministic canvas game loops.",
+      "Simulating N-body gravitational systems with Runge-Kutta 4.",
+      "Bridging pure mathematical logic with responsive software."
     ];
-    let phraseIdx = 0, charIdx = 0, isDeleting = false;
-    const typeElem = document.getElementById('hero-typing');
+    let tPhrase = 0, tChar = 0, tDeleting = false;
+    const tElem = document.getElementById('typing-matrix');
 
-    function tickTyping() {
-      const current = typePhrases[phraseIdx];
-      if (isDeleting) {
-        typeElem.innerText = current.substring(0, charIdx - 1);
-        charIdx--;
+    function stepTyping() {
+      const cur = typingPhrases[tPhrase];
+      if (tDeleting) {
+        tElem.innerText = cur.substring(0, tChar - 1);
+        tChar--;
       } else {
-        typeElem.innerText = current.substring(0, charIdx + 1);
-        charIdx++;
+        tElem.innerText = cur.substring(0, tChar + 1);
+        tChar++;
       }
 
-      let delta = isDeleting ? 30 : 60;
-      if (!isDeleting && charIdx === current.length) {
-        delta = 2500;
-        isDeleting = true;
-      } else if (isDeleting && charIdx === 0) {
-        isDeleting = false;
-        phraseIdx = (phraseIdx + 1) % typePhrases.length;
-        delta = 400;
+      let speed = tDeleting ? 25 : 55;
+      if (!tDeleting && tChar === cur.length) {
+        speed = 2400;
+        tDeleting = true;
+      } else if (tDeleting && tChar === 0) {
+        tDeleting = false;
+        tPhrase = (tPhrase + 1) % typingPhrases.length;
+        speed = 400;
       }
-      setTimeout(tickTyping, delta);
+      setTimeout(stepTyping, speed);
     }
-    tickTyping();
+    stepTyping();
 
     /* ==========================================================================
-       3. BACKGROUND AMBIENT KINETIC WAVE CANVAS
+       3. AMBIENT BACKGROUND PARTICLES & WAVES
        ========================================================================== */
-    const bgCanvas = document.getElementById('bg-canvas');
-    const bgCtx = bgCanvas.getContext('2d');
-    let bgW, bgH;
+    const ambCanvas = document.getElementById('ambient-canvas');
+    const ambCtx = ambCanvas.getContext('2d');
+    let aW, aH;
 
-    function resizeBg() {
-      bgW = bgCanvas.width = window.innerWidth;
-      bgH = bgCanvas.height = window.innerHeight;
+    function resizeAmbient() {
+      aW = ambCanvas.width = window.innerWidth;
+      aH = ambCanvas.height = window.innerHeight;
     }
-    window.addEventListener('resize', resizeBg);
-    resizeBg();
+    window.addEventListener('resize', resizeAmbient);
+    resizeAmbient();
 
-    let bgStep = 0;
-    function renderBg() {
-      bgCtx.clearRect(0, 0, bgW, bgH);
-      bgCtx.lineWidth = 1.2;
+    let aStep = 0;
+    function renderAmbient() {
+      ambCtx.clearRect(0, 0, aW, aH);
+      ambCtx.lineWidth = 1.2;
 
       for (let j = 0; j < 3; j++) {
-        bgCtx.beginPath();
-        const grad = bgCtx.createLinearGradient(0, 0, bgW, 0);
-        grad.addColorStop(0, 'rgba(168, 85, 247, 0.08)');
-        grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.15)');
-        grad.addColorStop(1, 'rgba(236, 72, 153, 0.08)');
-        bgCtx.strokeStyle = grad;
+        ambCtx.beginPath();
+        const grad = ambCtx.createLinearGradient(0, 0, aW, 0);
+        grad.addColorStop(0, 'rgba(168, 85, 247, 0.06)');
+        grad.addColorStop(0.5, 'rgba(56, 189, 248, 0.12)');
+        grad.addColorStop(1, 'rgba(236, 72, 153, 0.06)');
+        ambCtx.strokeStyle = grad;
 
-        for (let x = 0; x < bgW; x += 20) {
-          const y = Math.sin(x * 0.002 + bgStep + j * 0.9) * 50 +
-                    Math.cos(x * 0.001 - bgStep * 0.4) * 30 +
-                    (bgH * 0.45) + (j * 60 - 60);
-          if (x === 0) bgCtx.moveTo(x, y);
-          else bgCtx.lineTo(x, y);
+        for (let x = 0; x < aW; x += 25) {
+          const y = Math.sin(x * 0.002 + aStep + j * 0.9) * 45 +
+                    Math.cos(x * 0.001 - aStep * 0.4) * 25 +
+                    (aH * 0.5) + (j * 50 - 50);
+          if (x === 0) ambCtx.moveTo(x, y);
+          else ambCtx.lineTo(x, y);
         }
-        bgCtx.stroke();
+        ambCtx.stroke();
       }
-      bgStep += 0.008;
-      requestAnimationFrame(renderBg);
+      aStep += 0.006;
+      requestAnimationFrame(renderAmbient);
     }
-    renderBg();
+    renderAmbient();
 
-    // Spotlight movement
-    const glow = document.getElementById('cursor-glow');
+    const cursorLight = document.getElementById('cursor-light');
     window.addEventListener('mousemove', (e) => {
-      glow.style.left = e.clientX + 'px';
-      glow.style.top = e.clientY + 'px';
+      cursorLight.style.left = e.clientX + 'px';
+      cursorLight.style.top = e.clientY + 'px';
     });
 
     /* ==========================================================================
-       4. 2D DISCRETE NUMERICAL PDE WAVE LAB SOLVER
+       4. LAB 1: 2D NUMERICAL PDE WAVE SOLVER
        ========================================================================== */
-    const simCanvas = document.getElementById('sim-canvas');
-    const sCtx = simCanvas.getContext('2d');
-    const GW = 160, GH = 100; // Grid dimensions
-    simCanvas.width = GW;
-    simCanvas.height = GH;
+    const waveCanvas = document.getElementById('wave-canvas');
+    const wCtx = waveCanvas.getContext('2d');
+    const WW = 160, WH = 100;
+    waveCanvas.width = WW;
+    waveCanvas.height = WH;
 
-    let u_curr = new Float32Array(GW * GH);
-    let u_prev = new Float32Array(GW * GH);
-    let u_next = new Float32Array(GW * GH);
-    let barriers = new Uint8Array(GW * GH);
-    let emitterActive = true;
-    let simTime = 0;
+    let wCurr = new Float32Array(WW * WH);
+    let wPrev = new Float32Array(WW * WH);
+    let wNext = new Float32Array(WW * WH);
+    let wBarriers = new Uint8Array(WW * WH);
+    let isWaveEmitter = true;
+    let waveTime = 0;
 
-    function setSimMode(mode) {
-      barriers.fill(0);
+    function setWaveBarrier(mode) {
+      wBarriers.fill(0);
       if (mode === 'doubleSlit') {
-        const midX = Math.floor(GW * 0.45);
-        for (let y = 0; y < GH; y++) {
-          // Double slit gaps
-          if (!( (y > 35 && y < 45) || (y > 55 && y < 65) )) {
-            barriers[y * GW + midX] = 1;
-            barriers[y * GW + midX + 1] = 1;
+        const mx = Math.floor(WW * 0.45);
+        for (let y = 0; y < WH; y++) {
+          if (!((y > 34 && y < 44) || (y > 56 && y < 66))) {
+            wBarriers[y * WW + mx] = 1;
+            wBarriers[y * WW + mx + 1] = 1;
+          }
+        }
+      } else if (mode === 'singleSlit') {
+        const mx = Math.floor(WW * 0.45);
+        for (let y = 0; y < WH; y++) {
+          if (!(y > 45 && y < 55)) {
+            wBarriers[y * WW + mx] = 1;
+            wBarriers[y * WW + mx + 1] = 1;
           }
         }
       } else if (mode === 'harmonic') {
-        const cx = GW / 2, cy = GH / 2;
-        for (let y = 0; y < GH; y++) {
-          for (let x = 0; x < GW; x++) {
-            const d = Math.hypot(x - cx, y - cy);
-            if (d > 42) barriers[y * GW + x] = 1;
+        const cx = WW / 2, cy = WH / 2;
+        for (let y = 0; y < WH; y++) {
+          for (let x = 0; x < WW; x++) {
+            if (Math.hypot(x - cx, y - cy) > 42) wBarriers[y * WW + x] = 1;
           }
         }
       }
     }
-    setSimMode('doubleSlit');
+    setWaveBarrier('doubleSlit');
 
-    function clearSim() {
-      u_curr.fill(0);
-      u_prev.fill(0);
-      u_next.fill(0);
+    function toggleWaveEmitter() {
+      isWaveEmitter = !isWaveEmitter;
+      const btn = document.getElementById('emitter-switch');
+      btn.innerText = isWaveEmitter ? 'ACTIVE' : 'MUTED';
+      btn.className = isWaveEmitter ? 'px-3 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px]' : 'px-3 py-1 rounded bg-slate-800 text-slate-400 border border-slate-700 text-[10px]';
     }
 
-    function toggleEmitter() {
-      emitterActive = !emitterActive;
-      const btn = document.getElementById('emitter-btn');
-      btn.innerText = emitterActive ? 'ACTIVE' : 'MUTED';
-      btn.className = emitterActive ? 'px-3 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px]' : 'px-3 py-1 rounded bg-slate-800 text-slate-400 border border-slate-700 text-[10px]';
-    }
+    let isWaveDrawing = false;
+    function addWaveDisplacement(e) {
+      const rect = waveCanvas.getBoundingClientRect();
+      const sx = WW / rect.width;
+      const sy = WH / rect.height;
+      const gx = Math.floor((e.clientX - rect.left) * sx);
+      const gy = Math.floor((e.clientY - rect.top) * sy);
 
-    // Interactive mouse disturbance
-    let isDrawing = false;
-    function addDisturbance(e) {
-      const rect = simCanvas.getBoundingClientRect();
-      const scaleX = GW / rect.width;
-      const scaleY = GH / rect.height;
-      const gx = Math.floor((e.clientX - rect.left) * scaleX);
-      const gy = Math.floor((e.clientY - rect.top) * scaleY);
-
-      if (gx >= 2 && gx < GW - 2 && gy >= 2 && gy < GH - 2) {
+      if (gx >= 2 && gx < WW - 2 && gy >= 2 && gy < WH - 2) {
         for (let dy = -3; dy <= 3; dy++) {
           for (let dx = -3; dx <= 3; dx++) {
-            const idx = (gy + dy) * GW + (gx + dx);
-            u_curr[idx] += 3.5 * Math.exp(-(dx * dx + dy * dy) / 4);
+            const idx = (gy + dy) * WW + (gx + dx);
+            wCurr[idx] += 3.5 * Math.exp(-(dx * dx + dy * dy) / 4);
           }
         }
       }
     }
-    simCanvas.addEventListener('mousedown', (e) => { isDrawing = true; addDisturbance(e); playSound('click'); });
-    window.addEventListener('mouseup', () => isDrawing = false);
-    simCanvas.addEventListener('mousemove', (e) => { if (isDrawing) addDisturbance(e); });
+    waveCanvas.addEventListener('mousedown', (e) => { isWaveDrawing = true; addWaveDisplacement(e); playAudioTone('click'); });
+    window.addEventListener('mouseup', () => isWaveDrawing = false);
+    waveCanvas.addEventListener('mousemove', (e) => { if (isWaveDrawing) addWaveDisplacement(e); });
 
-    // Numerical Wave Solver Loop
-    const imgData = sCtx.createImageData(GW, GH);
-    function solveWave() {
-      const damping = parseFloat(document.getElementById('sim-damping').value);
-      const c = parseFloat(document.getElementById('sim-speed').value);
-      const freq = parseFloat(document.getElementById('sim-freq').value);
+    const wImg = wCtx.createImageData(WW, WH);
+    function loopWaveSolver() {
+      const damp = parseFloat(document.getElementById('wave-damping').value);
+      const c = parseFloat(document.getElementById('wave-speed').value);
       const c2 = c * c;
 
-      // Harmonic Point Source
-      if (emitterActive) {
-        const sx = Math.floor(GW * 0.15);
-        const sy = Math.floor(GH * 0.5);
-        u_curr[sy * GW + sx] = Math.sin(simTime * freq) * 4.0;
+      if (isWaveEmitter) {
+        const ex = Math.floor(WW * 0.15);
+        const ey = Math.floor(WH * 0.5);
+        wCurr[ey * WW + ex] = Math.sin(waveTime * 0.15) * 4.0;
       }
-      simTime++;
+      waveTime++;
 
-      // Finite Difference 2D Laplacian Update
-      for (let y = 1; y < GH - 1; y++) {
-        for (let x = 1; x < GW - 1; x++) {
-          const idx = y * GW + x;
-          if (barriers[idx]) {
-            u_next[idx] = 0;
+      for (let y = 1; y < WH - 1; y++) {
+        for (let x = 1; x < WW - 1; x++) {
+          const idx = y * WW + x;
+          if (wBarriers[idx]) {
+            wNext[idx] = 0;
             continue;
           }
-          const laplacian = u_curr[idx - 1] + u_curr[idx + 1] + u_curr[idx - GW] + u_curr[idx + GW] - 4 * u_curr[idx];
-          u_next[idx] = (2 * u_curr[idx] - u_prev[idx] + c2 * laplacian) * damping;
+          const lap = wCurr[idx - 1] + wCurr[idx + 1] + wCurr[idx - WW] + wCurr[idx + WW] - 4 * wCurr[idx];
+          wNext[idx] = (2 * wCurr[idx] - wPrev[idx] + c2 * lap) * damp;
         }
       }
 
-      // Render to Pixel Buffer with Tokyonight Palette
-      const data = imgData.data;
-      for (let i = 0; i < GW * GH; i++) {
-        const val = u_next[i];
+      const data = wImg.data;
+      for (let i = 0; i < WW * WH; i++) {
+        const val = wNext[i];
         const p = i * 4;
-        
-        if (barriers[i]) {
-          data[p] = 30; data[p+1] = 41; data[p+2] = 59; data[p+3] = 255; // Barrier Slate
+        if (wBarriers[i]) {
+          data[p] = 30; data[p+1] = 41; data[p+2] = 59; data[p+3] = 255;
         } else {
-          // Dynamic color interpolation
-          const intensity = Math.min(255, Math.abs(val) * 65);
+          const intensity = Math.min(255, Math.abs(val) * 70);
           if (val > 0) {
-            data[p] = 56; data[p+1] = 189; data[p+2] = 248; data[p+3] = intensity; // Cyan crest
+            data[p] = 56; data[p+1] = 189; data[p+2] = 248; data[p+3] = intensity;
           } else {
-            data[p] = 168; data[p+1] = 85; data[p+2] = 247; data[p+3] = intensity; // Purple trough
+            data[p] = 168; data[p+1] = 85; data[p+2] = 247; data[p+3] = intensity;
           }
         }
       }
-      sCtx.putImageData(imgData, 0, 0);
+      wCtx.putImageData(wImg, 0, 0);
 
-      // Swap buffers
-      u_prev.set(u_curr);
-      u_curr.set(u_next);
+      wPrev.set(wCurr);
+      wCurr.set(wNext);
 
-      requestAnimationFrame(solveWave);
+      requestAnimationFrame(loopWaveSolver);
     }
-    solveWave();
+    loopWaveSolver();
 
     /* ==========================================================================
-       5. INTERACTIVE TERMINAL EMULATOR
+       5. LAB 2: N-BODY GRAVITATIONAL MECHANICS (RK4 / VERLET INTEGRATOR)
        ========================================================================== */
-    const termInput = document.getElementById('terminal-input');
-    const termBody = document.getElementById('terminal-body');
+    const gCanvas = document.getElementById('gravity-canvas');
+    const gCtx = gCanvas.getContext('2d');
+    let gW, gH;
 
-    const commands = {
+    function resizeGravity() {
+      gW = gCanvas.width = gCanvas.parentElement.clientWidth;
+      gH = gCanvas.height = gCanvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeGravity);
+
+    let gBodies = [];
+    const G_CONST = 800;
+    const SOFTENING = 15;
+
+    function createBody(x, y, vx, vy, mass, color, radius) {
+      return { x, y, vx, vy, mass, color, radius, trail: [] };
+    }
+
+    function resetGravitySystem(preset) {
+      resizeGravity();
+      gBodies = [];
+      const cx = gW / 2, cy = gH / 2;
+
+      if (preset === 'solar') {
+        gBodies.push(createBody(cx, cy, 0, 0, 1500, '#f59e0b', 9)); // Sun
+        gBodies.push(createBody(cx, cy - 120, 3.5, 0, 10, '#38bdf8', 4)); // Planet 1
+        gBodies.push(createBody(cx, cy - 200, 2.7, 0, 25, '#a855f7', 5)); // Planet 2
+        gBodies.push(createBody(cx, cy - 215, 3.4, 0, 1, '#ec4899', 2)); // Moon
+      } else if (preset === 'threeBody') {
+        gBodies.push(createBody(cx - 80, cy, 0, 1.8, 600, '#38bdf8', 6));
+        gBodies.push(createBody(cx + 80, cy, 0, -1.8, 600, '#a855f7', 6));
+        gBodies.push(createBody(cx, cy - 100, -1.2, 0, 600, '#ec4899', 6));
+      } else if (preset === 'galaxy') {
+        gBodies.push(createBody(cx, cy, 0, 0, 3000, '#ffffff', 11));
+        for (let i = 0; i < 40; i++) {
+          const r = 40 + Math.random() * 200;
+          const theta = Math.random() * Math.PI * 2;
+          const speed = Math.sqrt((G_CONST * 3000) / r) * 0.038;
+          const bx = cx + r * Math.cos(theta);
+          const by = cy + r * Math.sin(theta);
+          const bvx = -speed * Math.sin(theta);
+          const bvy = speed * Math.cos(theta);
+          gBodies.push(createBody(bx, by, bvx, bvy, 1, '#38bdf8', 2));
+        }
+      }
+    }
+
+    function clearGravityBodies() {
+      gBodies = [];
+    }
+
+    let isFlinging = false, flingStart = { x: 0, y: 0 };
+    gCanvas.addEventListener('mousedown', (e) => {
+      const rect = gCanvas.getBoundingClientRect();
+      flingStart = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+      isFlinging = true;
+    });
+    gCanvas.addEventListener('mouseup', (e) => {
+      if (!isFlinging) return;
+      const rect = gCanvas.getBoundingClientRect();
+      const endX = e.clientX - rect.left;
+      const endY = e.clientY - rect.top;
+      const vx = (flingStart.x - endX) * 0.05;
+      const vy = (flingStart.y - endY) * 0.05;
+      gBodies.push(createBody(flingStart.x, flingStart.y, vx, vy, 40, '#ec4899', 4));
+      isFlinging = false;
+      playAudioTone('click');
+    });
+
+    function loopGravity() {
+      if (!gW) resizeGravity();
+      const showTrails = document.getElementById('grav-trails').checked;
+      
+      gCtx.fillStyle = showTrails ? 'rgba(4, 6, 10, 0.25)' : 'rgba(4, 6, 10, 1)';
+      gCtx.fillRect(0, 0, gW, gH);
+
+      const dt = 0.6;
+      for (let i = 0; i < gBodies.length; i++) {
+        let fx = 0, fy = 0;
+        const bi = gBodies[i];
+
+        for (let j = 0; j < gBodies.length; j++) {
+          if (i === j) continue;
+          const bj = gBodies[j];
+          const dx = bj.x - bi.x;
+          const dy = bj.y - bi.y;
+          const distSq = dx * dx + dy * dy + SOFTENING * SOFTENING;
+          const force = (G_CONST * bj.mass) / (distSq * Math.sqrt(distSq));
+          fx += force * dx;
+          fy += force * dy;
+        }
+
+        bi.vx += fx * dt;
+        bi.vy += fy * dt;
+        bi.x += bi.vx * dt;
+        bi.y += bi.vy * dt;
+
+        // Render Body
+        gCtx.beginPath();
+        gCtx.arc(bi.x, bi.y, bi.radius, 0, Math.PI * 2);
+        gCtx.fillStyle = bi.color;
+        gCtx.shadowColor = bi.color;
+        gCtx.shadowBlur = 10;
+        gCtx.fill();
+        gCtx.shadowBlur = 0;
+      }
+
+      requestAnimationFrame(loopGravity);
+    }
+
+    /* ==========================================================================
+       6. LAB 3: LORENZ CHAOS ATTRACTOR (3D PROJECTION)
+       ========================================================================== */
+    const lCanvas = document.getElementById('lorenz-canvas');
+    const lCtx = lCanvas.getContext('2d');
+    let lW, lH;
+
+    function resizeLorenz() {
+      lW = lCanvas.width = lCanvas.parentElement.clientWidth;
+      lH = lCanvas.height = lCanvas.parentElement.clientHeight;
+    }
+    window.addEventListener('resize', resizeLorenz);
+
+    let lx = 0.1, ly = 0, lz = 0;
+    const sigma = 10, rho = 28, beta = 8/3;
+    let lPoints = [];
+    let lRotX = 0.4, lRotY = 0.6;
+
+    function resetLorenz() {
+      lx = 0.1 + Math.random() * 0.1;
+      ly = Math.random() * 0.1;
+      lz = Math.random() * 0.1;
+      lPoints = [];
+      playAudioTone('beep');
+    }
+
+    let isLorenzDragging = false, lDragStart = { x: 0, y: 0 };
+    lCanvas.addEventListener('mousedown', (e) => { isLorenzDragging = true; lDragStart = { x: e.clientX, y: e.clientY }; });
+    window.addEventListener('mouseup', () => isLorenzDragging = false);
+    lCanvas.addEventListener('mousemove', (e) => {
+      if (!isLorenzDragging) return;
+      lRotY += (e.clientX - lDragStart.x) * 0.008;
+      lRotX += (e.clientY - lDragStart.y) * 0.008;
+      lDragStart = { x: e.clientX, y: e.clientY };
+    });
+
+    function loopLorenz() {
+      if (!lW) resizeLorenz();
+      lCtx.fillStyle = 'rgba(4, 6, 10, 0.18)';
+      lCtx.fillRect(0, 0, lW, lH);
+
+      const dt = 0.009;
+      for (let s = 0; s < 8; s++) {
+        const dx = sigma * (ly - lx) * dt;
+        const dy = (lx * (rho - lz) - ly) * dt;
+        const dz = (lx * ly - beta * lz) * dt;
+        lx += dx; ly += dy; lz += dz;
+        lPoints.push({ x: lx, y: ly, z: lz });
+        if (lPoints.length > 2500) lPoints.shift();
+      }
+
+      const scale = 9.5;
+      const cx = lW / 2, cy = lH / 2;
+
+      lCtx.lineWidth = 1.3;
+      for (let i = 1; i < lPoints.length; i++) {
+        const p1 = lPoints[i - 1], p2 = lPoints[i];
+
+        // 3D rotation
+        let x1 = p1.x * Math.cos(lRotY) - p1.y * Math.sin(lRotY);
+        let y1 = (p1.x * Math.sin(lRotY) + p1.y * Math.cos(lRotY)) * Math.cos(lRotX) - (p1.z - 25) * Math.sin(lRotX);
+
+        let x2 = p2.x * Math.cos(lRotY) - p2.y * Math.sin(lRotY);
+        let y2 = (p2.x * Math.sin(lRotY) + p2.y * Math.cos(lRotY)) * Math.cos(lRotX) - (p2.z - 25) * Math.sin(lRotX);
+
+        lCtx.beginPath();
+        lCtx.moveTo(cx + x1 * scale, cy + y1 * scale);
+        lCtx.lineTo(cx + x2 * scale, cy + y2 * scale);
+        const hue = (i * 0.15 + waveTime * 0.5) % 360;
+        lCtx.strokeStyle = `hsl(${hue}, 85%, 65%)`;
+        lCtx.stroke();
+      }
+
+      requestAnimationFrame(loopLorenz);
+    }
+
+    function switchLabMode(mode) {
+      document.getElementById('wave-lab-container').classList.add('hidden');
+      document.getElementById('gravity-lab-container').classList.add('hidden');
+      document.getElementById('lorenz-lab-container').classList.add('hidden');
+
+      const btnWave = document.getElementById('tab-wave-btn');
+      const btnGrav = document.getElementById('tab-gravity-btn');
+      const btnLor = document.getElementById('tab-lorenz-btn');
+
+      btnWave.className = "px-4 py-2 rounded-lg text-slate-400 hover:text-white transition";
+      btnGrav.className = "px-4 py-2 rounded-lg text-slate-400 hover:text-white transition";
+      btnLor.className = "px-4 py-2 rounded-lg text-slate-400 hover:text-white transition";
+
+      if (mode === 'wave') {
+        document.getElementById('wave-lab-container').classList.remove('hidden');
+        btnWave.className = "px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold shadow transition";
+      } else if (mode === 'gravity') {
+        document.getElementById('gravity-lab-container').classList.remove('hidden');
+        btnGrav.className = "px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold shadow transition";
+        resetGravitySystem('solar');
+      } else if (mode === 'lorenz') {
+        document.getElementById('lorenz-lab-container').classList.remove('hidden');
+        btnLor.className = "px-4 py-2 rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white font-semibold shadow transition";
+        resetLorenz();
+      }
+      playAudioTone('beep');
+    }
+
+    loopGravity();
+    loopLorenz();
+
+    /* ==========================================================================
+       7. INTERACTIVE TERMINAL EMULATOR
+       ========================================================================== */
+    const termIn = document.getElementById('shell-input');
+    const termOut = document.getElementById('shell-output');
+
+    const shellCommands = {
       help: () => `
-<span class="text-cyan-400 font-bold">AVAILABLE COMMANDS:</span>
-  • <span class="text-purple-300 font-semibold">neofetch</span>   : Display developer & system specifications
-  • <span class="text-purple-300 font-semibold">skills</span>     : View mathematical & software engineering matrix
-  • <span class="text-purple-300 font-semibold">projects</span>   : Output flagship repositories with GitHub links
-  • <span class="text-purple-300 font-semibold">physics</span>    : Print active theoretical research domains
-  • <span class="text-purple-300 font-semibold">contact</span>    : Print direct developer contact channels
-  • <span class="text-purple-300 font-semibold">clear</span>      : Clear console buffer`,
+<span class="text-cyan-400 font-bold">AVAILABLE SHELL COMMANDS:</span>
+  • <span class="text-purple-300 font-semibold">neofetch</span>     : Developer hardware & OS profile breakdown
+  • <span class="text-purple-300 font-semibold">skills</span>       : Theoretical mechanics & engineering matrix
+  • <span class="text-purple-300 font-semibold">projects</span>     : Flagship software repositories & architecture
+  • <span class="text-purple-300 font-semibold">physics</span>      : Active PDE research, mechanics & mathematical domains
+  • <span class="text-purple-300 font-semibold">benchmark</span>    : Run Monte Carlo $\\pi$ computation in terminal
+  • <span class="text-purple-300 font-semibold">clear</span>        : Flush shell terminal buffer
+  • <span class="text-purple-300 font-semibold">contact</span>      : Communication channels & email`,
 
       neofetch: () => `
 <div class="flex gap-4 items-start text-xs leading-relaxed">
@@ -950,96 +1303,201 @@
   <div>
     <span class="text-purple-400 font-bold">aravind@shadow-wave</span><br/>
     ---------------------------------<br/>
-    <span class="text-slate-400">OS:</span> Fedora Linux 40 (KDE Plasma 6.1)<br/>
-    <span class="text-slate-400">Host:</span> Computational Physics Engine v3.4<br/>
-    <span class="text-slate-400">Kernel:</span> WebAssembly / Pyodide Core<br/>
-    <span class="text-slate-400">Shell:</span> zsh 5.9 + Python 3.11 WASM<br/>
-    <span class="text-slate-400">Stack:</span> JavaScript, Python, Tailwind, HTML5 Canvas<br/>
-    <span class="text-slate-400">Motto:</span> "Transforming differential equations into interactive code."
+    <span class="text-slate-400">OS:</span> Fedora Linux 40 (KDE Plasma 6.1 x86_64)<br/>
+    <span class="text-slate-400">Host:</span> Computational Physics Core Engine v3.4<br/>
+    <span class="text-slate-400">Kernel:</span> WebAssembly / Pyodide V8 Engine<br/>
+    <span class="text-slate-400">Shell:</span> zsh 5.9 + In-Browser Python 3.11 WASM<br/>
+    <span class="text-slate-400">Stack:</span> JavaScript, Python, Tailwind, Canvas 2D, KaTeX<br/>
+    <span class="text-slate-400">Motto:</span> "Transforming mathematical mechanics into interactive software."
   </div>
 </div>`,
 
       skills: () => `
-<span class="text-cyan-400 font-bold">CORE TECHNICAL ARSENAL:</span>
-  • <span class="text-white">Applied Mathematics:</span> Vector Calculus, ODE/PDE Numerical Solvers, Runge-Kutta 4
-  • <span class="text-white">Client Execution:</span> WebAssembly (Wasm), Pyodide, Python, NumPy, Pandas
-  • <span class="text-white">Graphics & UI:</span> HTML5 Canvas API, Real-Time Game Loops, Tailwind CSS
-  • <span class="text-white">Systems:</span> Linux Kernel Power User (Fedora), Git Actions, Android Studio`,
+<span class="text-cyan-400 font-bold">ENGINEERING & THEORETICAL MATRIX:</span>
+  • <span class="text-white">Mathematics & Physics:</span> Vector Calculus, PDEs, 2D Wave PDE, RK4 Integration
+  • <span class="text-white">WebAssembly & Python:</span> Pyodide, NumPy, Pandas, Client-Side In-Memory Execution
+  • <span class="text-white">Graphics & Interfaces:</span> Direct HTML5 Canvas API, WebGL, Tailwind Architecture
+  • <span class="text-white">Systems:</span> Linux Kernel Power-User, Git Automation, Android Studio`,
 
       projects: () => `
-<span class="text-pink-400 font-bold">FLAGSHIP BUILDS:</span>
-  1. <a href="https://github.com/shadow-wave/Omni-pro" target="_blank" class="text-cyan-300 underline">Omni-Pro IDE</a>: Offline-First Pyodide Wasm Python IDE
+<span class="text-pink-400 font-bold">FLAGSHIP PRODUCTION BUILDS:</span>
+  1. <a href="https://github.com/shadow-wave/Omni-pro" target="_blank" class="text-cyan-300 underline">Omni-Pro IDE</a>: Offline-First Pyodide WASM Python & Matplotlib IDE
   2. <a href="https://github.com/shadow-wave/ArtGrid-Studio-Pro" target="_blank" class="text-purple-300 underline">ArtGrid Studio Pro</a>: Precision Canvas Proportion Mapping Suite
-  3. <a href="https://github.com/shadow-wave/pokemon-champions-arena" target="_blank" class="text-pink-300 underline">Pokemon Champions Arena</a>: Finite State-Machine Combat Arena
-  4. <a href="https://github.com/shadow-wave/Zen_PDF" target="_blank" class="text-emerald-300 underline">Zen_PDF</a>: Client-Side Document Manipulation Environment`,
+  3. <a href="https://github.com/shadow-wave/pokemon-champions-arena" target="_blank" class="text-pink-300 underline">Pokemon Champions Arena</a>: Deterministic State-Machine Combat Arena
+  4. <a href="https://github.com/shadow-wave/Zen_PDF" target="_blank" class="text-emerald-300 underline">Zen_PDF</a>: Client-Side Fast Document Inspection Tool`,
 
       physics: () => `
-<span class="text-cyan-400 font-bold">THEORETICAL DOMAINS:</span>
+<span class="text-cyan-400 font-bold">THEORETICAL CURRICULUM:</span>
   • Classical Mechanics & Perpendicular Axis Transformations
-  • Wave Packet Interference & Optical Path Dynamics
-  • Non-linear Dynamical Systems & Phase Space Mapping`,
+  • Wave Packet Dispersion, Interference & Optical Boundaries
+  • Non-linear Dynamical Systems & Chaotic Phase Spaces`,
+
+      benchmark: () => {
+        const t0 = performance.now();
+        let inside = 0, n = 5000000;
+        for (let i = 0; i < n; i++) {
+          const x = Math.random(), y = Math.random();
+          if (x * x + y * y <= 1) inside++;
+        }
+        const pi = (4 * inside) / n;
+        const duration = (performance.now() - t0).toFixed(2);
+        return `<span class="text-emerald-400">Monte Carlo $\\pi$ calculated: ${pi.toFixed(6)} across 5M samplings in ${duration}ms.</span>`;
+      },
 
       contact: () => `
 <span class="text-emerald-400 font-bold">COMMUNICATION MATRIX:</span>
   • <span class="text-slate-400">Email:</span> <a href="mailto:aravindok6@gmail.com" class="text-cyan-300 underline">aravindok6@gmail.com</a>
   • <span class="text-slate-400">GitHub:</span> <a href="https://github.com/shadow-wave" target="_blank" class="text-purple-300 underline">github.com/shadow-wave</a>
-  • <span class="text-slate-400">Location:</span> Kerala, India`
+  • <span class="text-slate-400">Region:</span> Kerala, India`
     };
 
-    termInput.addEventListener('keydown', (e) => {
+    termIn.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-        const raw = termInput.value.trim();
+        const raw = termIn.value.trim();
         const cmd = raw.toLowerCase();
-        termInput.value = '';
+        termIn.value = '';
 
         if (!raw) return;
-        playSound('term');
+        playAudioTone('term');
 
-        const line = document.createElement('div');
-        line.innerHTML = `<span class="text-purple-400 font-bold">aravind@shadow-wave:~$</span> <span class="text-slate-100">${raw}</span>`;
-        termBody.appendChild(line);
+        const cmdLine = document.createElement('div');
+        cmdLine.innerHTML = `<span class="text-purple-400 font-bold">aravind@shadow-wave:~$</span> <span class="text-slate-100">${raw}</span>`;
+        termOut.appendChild(cmdLine);
 
-        const response = document.createElement('div');
+        const res = document.createElement('div');
         if (cmd === 'clear') {
-          termBody.innerHTML = '';
+          termOut.innerHTML = '';
           return;
-        } else if (commands[cmd]) {
-          response.innerHTML = commands[cmd]();
+        } else if (shellCommands[cmd]) {
+          res.innerHTML = shellCommands[cmd]();
         } else {
-          response.innerHTML = `<span class="text-red-400">zsh: command not found: ${raw}. Type <span class="text-cyan-400">help</span> for valid commands.</span>`;
+          res.innerHTML = `<span class="text-red-400">zsh: command not found: ${raw}. Type <span class="text-cyan-400 font-bold">help</span> for valid commands.</span>`;
         }
-        termBody.appendChild(response);
-        termBody.scrollTop = termBody.scrollHeight;
+        termOut.appendChild(res);
+        termOut.scrollTop = termOut.scrollHeight;
       }
     });
 
     /* ==========================================================================
-       6. TELEMETRY & FPS HUD COUNTERS
+       8. CLIENT JAVASCRIPT BENCHMARK SUITE
        ========================================================================== */
-    // Real-time UTC Clock
-    function updateClock() {
-      const now = new Date();
-      document.getElementById('utc-clock').innerText = now.toUTCString().split(' ')[4] + ' UTC';
+    function runPiBenchmark() {
+      const btn = document.getElementById('bench-pi-btn');
+      btn.innerText = 'Calculating...';
+      playAudioTone('beep');
+      
+      setTimeout(() => {
+        const t0 = performance.now();
+        let inside = 0, total = 10000000;
+        for (let i = 0; i < total; i++) {
+          const x = Math.random(), y = Math.random();
+          if (x * x + y * y <= 1) inside++;
+        }
+        const pi = (4 * inside) / total;
+        const time = (performance.now() - t0).toFixed(2);
+
+        document.getElementById('bench-pi-val').innerText = pi.toFixed(7);
+        document.getElementById('bench-pi-time').innerText = `${time} ms`;
+        btn.innerText = 'Re-run Benchmark';
+      }, 30);
     }
-    setInterval(updateClock, 1000);
-    updateClock();
 
-    // FPS Meter
-    let lastLoop = performance.now();
-    let frameCount = 0;
-    const fpsDisplay = document.getElementById('fps-counter');
+    function runMatrixBenchmark() {
+      const btn = document.getElementById('bench-mat-btn');
+      btn.innerText = 'Multiplying...';
+      playAudioTone('beep');
 
-    function calculateFps() {
+      setTimeout(() => {
+        const N = 400;
+        const A = new Float64Array(N * N).fill(1.5);
+        const B = new Float64Array(N * N).fill(2.5);
+        const C = new Float64Array(N * N);
+
+        const t0 = performance.now();
+        for (let i = 0; i < N; i++) {
+          for (let k = 0; k < N; k++) {
+            for (let j = 0; j < N; j++) {
+              C[i * N + j] += A[i * N + k] * B[k * N + j];
+            }
+          }
+        }
+        const time = (performance.now() - t0).toFixed(2);
+        document.getElementById('bench-mat-time').innerText = `${time} ms`;
+        btn.innerText = 'Re-run Benchmark';
+      }, 30);
+    }
+
+    function runFftBenchmark() {
+      const btn = document.getElementById('bench-fft-btn');
+      btn.innerText = 'Transforming...';
+      playAudioTone('beep');
+
+      setTimeout(() => {
+        const N = 16384;
+        const real = new Float64Array(N);
+        const imag = new Float64Array(N);
+        for (let i = 0; i < N; i++) real[i] = Math.sin(i * 0.1) + Math.cos(i * 0.05);
+
+        const t0 = performance.now();
+        // Cooley-Tukey Radix-2 FFT
+        for (let i = 0, j = 0; i < N; i++) {
+          if (j > i) {
+            let tr = real[i]; real[i] = real[j]; real[j] = tr;
+            let ti = imag[i]; imag[i] = imag[j]; imag[j] = ti;
+          }
+          let m = N >> 1;
+          while (m >= 1 && j >= m) { j -= m; m >>= 1; }
+          j += m;
+        }
+        for (let len = 2; len <= N; len <<= 1) {
+          const angle = -2 * Math.PI / len;
+          const wlen_r = Math.cos(angle), wlen_i = Math.sin(angle);
+          for (let i = 0; i < N; i += len) {
+            let w_r = 1, w_i = 0;
+            for (let j = 0; j < len / 2; j++) {
+              const u_r = real[i + j], u_i = imag[i + j];
+              const v_r = real[i + j + len / 2] * w_r - imag[i + j + len / 2] * w_i;
+              const v_i = real[i + j + len / 2] * w_i + imag[i + j + len / 2] * w_r;
+              real[i + j] = u_r + v_r;
+              imag[i + j] = u_i + v_i;
+              real[i + j + len / 2] = u_r - v_r;
+              imag[i + j + len / 2] = u_i - v_i;
+              const next_w_r = w_r * wlen_r - w_i * wlen_i;
+              w_i = w_r * wlen_i + w_i * wlen_r;
+              w_r = next_w_r;
+            }
+          }
+        }
+        const time = (performance.now() - t0).toFixed(2);
+        document.getElementById('bench-fft-val').innerText = `${Math.hypot(real[1], imag[1]).toFixed(1)} dB`;
+        document.getElementById('bench-fft-time').innerText = `${time} ms`;
+        btn.innerText = 'Re-run Benchmark';
+      }, 30);
+    }
+
+    /* ==========================================================================
+       9. TELEMETRY CLOCK & FPS COUNTER
+       ========================================================================== */
+    function updateClockHUD() {
+      const d = new Date();
+      document.getElementById('hud-utc').innerText = d.toUTCString().split(' ')[4] + ' UTC';
+    }
+    setInterval(updateClockHUD, 1000);
+    updateClockHUD();
+
+    let fpsFrames = 0, fpsLast = performance.now();
+    const fpsElem = document.getElementById('hud-fps');
+    function measureFPS() {
+      fpsFrames++;
       const now = performance.now();
-      frameCount++;
-      if (now - lastLoop >= 1000) {
-        fpsDisplay.innerText = `FPS: ${frameCount}`;
-        frameCount = 0;
-        lastLoop = now;
+      if (now - fpsLast >= 1000) {
+        fpsElem.innerText = `FPS: ${fpsFrames}`;
+        fpsFrames = 0;
+        fpsLast = now;
       }
-      requestAnimationFrame(calculateFps);
+      requestAnimationFrame(measureFPS);
     }
-    calculateFps();
+    measureFPS();
   </script>
 </body>
 </html>
